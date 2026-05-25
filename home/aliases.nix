@@ -18,7 +18,7 @@
   ga = "git add";
   gc = "git commit";
   gp = "git push";
-	pushnix = "cd /etc/nixos && git add . && git commit -m 'update' && git push; cd -";
+  pushnix = "cd /etc/nixos && git add . && git commit -m 'update'; git push; cd -";
   gl = "git log --oneline --graph";
   gd = "git diff";
 
@@ -28,5 +28,5 @@
   top = "btop";
   c = "clear";
   ports = "ss -tulanp";
-	hp = "nvim /etc/nixos/home-packages.nix";
+  hp = "nvim /etc/nixos/home/packages.nix";
 }
