@@ -111,10 +111,5 @@ in
   # BTOP
   xdg.configFile."btop/btop.conf".source = ./btop.conf;
 
-	# ZED
-  programs.zed-editor = {
-    enable = true;
-    extensions = [ "nix" "catppuccin" "catppuccin-icons" ];
-  };
-  xdg.configFile."zed/settings.json".source = ./zed-settings.json;
-}
+
+ }

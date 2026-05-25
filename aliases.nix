@@ -1,5 +1,5 @@
 {
-  rebuild = "sudo nixos-rebuild switch --flake /etc/nixos#nixos";
+  rebuild = "sudo nixos-rebuild switch --flake /etc/nixos#nixos |& nom";
   rebuild-dry = "sudo nixos-rebuild dry-build --flake /etc/nixos#nixos";
   nix-clean = "sudo nix-collect-garbage -d";
   nix-update = "sudo nix flake update /etc/nixos";
@@ -18,11 +18,12 @@
   ga = "git add";
   gc = "git commit";
   gp = "git push";
+	pushnix = "cd /etc/nixos && git add . && git commit -m 'update' && git push; cd -";
   gl = "git log --oneline --graph";
   gd = "git diff";
 
   v = "nvim";
-  vi = "nvim";
+  vi = "nvim";	
 
   top = "btop";
   c = "clear";
