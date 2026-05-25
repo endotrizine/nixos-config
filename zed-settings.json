@@ -1,0 +1,67 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "soft_wrap": "editor_width",
+  "vim_mode": false,
+  "helix_mode": false,
+  "cursor_shape": "bar",
+  "ui_font_family": "Geist",
+  "buffer_font_weight": 400.0,
+  "cli_default_open_behavior": "existing_window",
+  "buffer_font_family": "Geist Mono",
+  "proxy": "",
+  "terminal": {
+    "font_family": "Geist Mono",
+  },
+  "git_panel": {
+    "tree_view": true,
+  },
+  "autosave": "on_focus_change",
+  "icon_theme": "Catppuccin Mocha",
+  "context_servers": {
+    "langchain": {
+      "enabled": true,
+      "url": "https://docs.langchain.com/mcp",
+    },
+  },
+  "agent": {
+    "default_profile": "ask",
+    "default_model": {
+      "effort": "medium",
+      "provider": "zed.dev",
+      "model": "gpt-5.3-codex",
+      "enable_thinking": true,
+    },
+    "dock": "right",
+    "favorite_models": [],
+    "model_parameters": [],
+  },
+  "project_panel": {
+    "dock": "left",
+  },
+  "session": {
+    "trust_all_worktrees": true,
+  },
+  "multi_cursor_modifier": "cmd_or_ctrl",
+  "show_whitespaces": "trailing",
+  "agent_servers": {
+    "your_agent": {
+      "type": "custom",
+      "command": "path_to_executable",
+    },
+  },
+  "base_keymap": "VSCode",
+  "ui_font_size": 16,
+  "buffer_font_size": 15.0,
+  "theme": {
+    "mode": "system",
+    "light": "One Light",
+    "dark": "Catppuccin Mocha",
+  },
+}
