@@ -19,52 +19,48 @@ with pkgs; [
   wget
   zoxide
 
-  # Dev
+  # Dev — core
   bun
   deno
   git
+  gh
+  lazygit
   neovim
   nixd
-  nixfmt-rfc-style
+  nixfmt
+  nix-output-monitor
   nodejs
   ollama
   python3
   python3Packages.evdev
   python3Packages.pillow
-  zed-editor
-	lazygit
-  gh
-  nix-output-monitor
   tealdeer
+  zed-editor
 
-  # Python
+  # Dev — Python
   uv
   ruff
   pyright
 
-  # Frontend
+  # Dev — frontend
   pnpm
 
-  # Dev утилиты
+  # Dev — utils
   httpie
-  gh
-  lazygit
 
-  # Терминалы
+  # Terminals
   foot
   kitty
 
-  # Браузеры
-
-  # Редакторы/IDE
+  # Editors / IDE
   lapce
 
-  # Файловые менеджеры
+  # File managers
   kdePackages.dolphin
   nautilus
   yazi
 
-  # Медиа
+  # Media
   cava
   easyeffects
   ffmpeg
@@ -77,11 +73,11 @@ with pkgs; [
   playerctl
   yt-dlp
 
-  # Архивы / файлы
+  # Archives / files
   p7zip
   poppler
 
-  # Скриншоты/запись
+  # Screenshots / recording
   grim
   slurp
   swappy
@@ -96,19 +92,17 @@ with pkgs; [
   wtype
   ydotool
 
-  # Лаунчер
+  # Launcher
   fuzzel
 
   # Theming
   adw-gtk3
   capitaine-cursors
 
-  # Утилиты
+  # Misc
   libnotify
   libqalculate
   translate-shell
   wlsunset
-
-  # Прочее
   cloudflare-warp
 ]
