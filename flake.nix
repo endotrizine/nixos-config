@@ -17,21 +17,33 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, noctalia-shell, zen-browser, ... }@inputs: {
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = { inherit inputs; };
-      modules = [
-        ./configuration.nix
-        noctalia-shell.nixosModules.default
-        home-manager.nixosModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = { inherit inputs; };
-          home-manager.users.endotrizine = import ./home;
-        }
-      ];
+  outputs = { self, nixpkgs, home-manager, noctalia-shell, zen-browser, ... }@inputs:
+    let
+      mkSystem = host: nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit inputs; };
+        modules = [
+          (./hosts + "/${host}")
+          noctalia-shell.nixosModules.default
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = { inherit inputs; };
+            home-manager.users.endotrizine = import ./home;
+          }
+        ];
+      };
+    in {
+      # `nixos-rebuild switch --flake /etc/nixos#<host>`
+      # Current VM: hostname `nixos` lives in hosts/vm/.
+      # When migrating to real hardware:
+      #   1. Create hosts/<newname>/ with hardware-configuration.nix,
+      #      a host-specific boot.nix and any other host-only modules.
+      #   2. Add a line below: <newname> = mkSystem "<newname>";
+      #   3. Rebuild: `sudo nixos-rebuild switch --flake /etc/nixos#<newname>`
+      nixosConfigurations = {
+        nixos = mkSystem "vm";
+      };
     };
-  };
 }
