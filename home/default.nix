@@ -19,4 +19,9 @@
   home.packages = import ./packages.nix { inherit pkgs; };
 
   programs.home-manager.enable = true;
+	catppuccin = {
+  	enable = true;
+  	flavor = "mocha";
+	};
+	catppuccin.cache.enable = true;
 }

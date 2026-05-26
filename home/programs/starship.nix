@@ -5,5 +5,5 @@
     enableFishIntegration = true;
   };
 
-  xdg.configFile."starship.toml".source = ../../configs/starship.toml;
+  #xdg.configFile."starship.toml".source = ../../configs/starship.toml;
 }

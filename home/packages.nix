@@ -105,4 +105,6 @@ with pkgs; [
   translate-shell
   wlsunset
   cloudflare-warp
+
+	clash-verge-rev
 ]

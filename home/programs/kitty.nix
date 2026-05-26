@@ -2,7 +2,6 @@
 {
   programs.kitty = {
     enable = true;
-    themeFile = "Catppuccin-Mocha";
     font = {
       name = "JetBrains Mono Nerd Font";
       size = 11;

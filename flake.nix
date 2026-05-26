@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-
+		catppuccin.url = "github:catppuccin/nix";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -25,12 +25,18 @@
         modules = [
           (./hosts + "/${host}")
           noctalia-shell.nixosModules.default
+					inputs.catppuccin.nixosModules.catppuccin
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = { inherit inputs; };
-            home-manager.users.endotrizine = import ./home;
+            home-manager.users.endotrizine = {
+						  imports = [
+						    ./home/default.nix
+						    inputs.catppuccin.homeModules.catppuccin
+  						];
+						};
           }
         ];
       };

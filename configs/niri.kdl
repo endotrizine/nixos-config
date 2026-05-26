@@ -372,8 +372,13 @@ binds {
     Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
     Mod+Shift+O { power-off-monitors; }
 
-    // ─── App launchers ───
+    // ─── Shell overlays (Noctalia IPC) ───
     Mod+Space repeat=false { spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
+    Mod+V { spawn "noctalia-shell" "ipc" "call" "clipboard" "toggle"; }
+    Mod+Alt+L allow-when-locked=true { spawn "noctalia-shell" "ipc" "call" "lockScreen" "lock"; }
+    Mod+Comma { spawn "noctalia-shell" "ipc" "call" "settings" "toggle"; }
+
+    // ─── App launchers ───
     Mod+T { spawn "kitty"; }
     Mod+Return { spawn "kitty"; }
     Super+E { spawn "nautilus"; }
@@ -425,10 +430,14 @@ binds {
     // ─── Multi-monitor ───
     Mod+Ctrl+Left  { focus-monitor-left; }
     Mod+Ctrl+Right { focus-monitor-right; }
+    Mod+Ctrl+Up    { focus-workspace-up; }
+    Mod+Ctrl+Down  { focus-workspace-down; }
     Mod+Ctrl+Shift+Left  { move-column-to-monitor-left; }
     Mod+Ctrl+Shift+Right { move-column-to-monitor-right; }
     Mod+Ctrl+Shift+Up    { move-column-to-monitor-up; }
     Mod+Ctrl+Shift+Down  { move-column-to-monitor-down; }
+    Mod+Alt+Down { move-column-to-workspace-down; }
+    Mod+Alt+Up   { move-column-to-workspace-up; }
 
     // ─── Workspaces ───
     Mod+1 { focus-workspace 1; }

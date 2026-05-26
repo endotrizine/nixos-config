@@ -1,5 +1,5 @@
 {
-  rebuild = "sudo nixos-rebuild switch --flake /etc/nixos#nixos |& nom";
+  rebuild = "sudo -v; and sudo nixos-rebuild switch --flake /etc/nixos#nixos |& nom";
   rebuild-dry = "sudo nixos-rebuild dry-build --flake /etc/nixos#nixos";
   nix-clean = "sudo nix-collect-garbage -d";
   nix-update = "sudo nix flake update /etc/nixos";
