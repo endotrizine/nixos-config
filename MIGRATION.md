@@ -66,7 +66,9 @@ mount -o noatime,compress=zstd,subvol=@log  /dev/nvme0n1p2 /mnt/var/log
 mount /dev/nvme0n1p1 /mnt/boot
 ```
 
-> **ВНИМАНИЕ ESP**: команда `mkfs.fat` СТИРАЕТ Windows EFI entries с того же раздела. Если Windows на отдельном ESP (как у тебя — `sdb1`), ничего не трогается. Windows boot manager на `sdb1`, systemd-boot подхватит при `boot.loader.efi.canTouchEfiVariables = true`.
+> **ВНИМАНИЕ ESP**: `mkfs.fat` форматирует только `nvme0n1p1` (Arch ESP). Windows ESP — это **отдельный** раздел `sdb1` (UUID `B2B5-674A`), не трогается.
+>
+> **НО**: systemd-boot сканирует только тот ESP, который смонтирован в `/boot` (=`nvme0n1p1`). Windows на `sdb1` **в systemd-boot menu НЕ появится** — это нормально. Чтобы загрузиться в Windows: при старте жми UEFI boot menu (обычно **F12 / F11 / F8 / Esc** в зависимости от мат. платы) и выбирай `Windows Boot Manager`. NixOS останется default'ом.
 
 ## Шаг 2 — установка
 
@@ -84,6 +86,8 @@ cp /mnt/etc/nixos/hardware-configuration.nix /mnt/etc/nixos/hosts/desktop/hardwa
 cat /mnt/etc/nixos/hosts/desktop/hardware-configuration.nix | head -20
 
 # Install (uses hosts/desktop/, builds NVIDIA module, microcode, all of it)
+# WARNING: NVIDIA kernel module compile + package downloads may take 30–60 minutes.
+# It's not stuck — watch progress with `htop` in another TTY (Alt+F2).
 nixos-install --flake /mnt/etc/nixos#desktop
 
 # At the end nixos-install asks for the root password — set something you remember.
@@ -94,7 +98,7 @@ reboot
 
 ## Шаг 3 — первый boot
 
-1. systemd-boot menu появится. Выбери `NixOS`. Windows тоже должен быть видим как отдельный entry.
+1. systemd-boot menu появится с одним пунктом `NixOS`. Выбирай. Windows в этом меню НЕТ (см. предупреждение в шаге 1) — для Windows: ребут → UEFI boot menu (F-key).
 2. После boot: greetd → niri-session запустится автоматически как `endotrizine`.
 3. Если **чёрный экран** при загрузке niri — переключись на TTY (`Ctrl+Alt+F2`), залогинься как root (пароль из шага 2), и:
    ```fish

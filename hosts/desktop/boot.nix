@@ -13,6 +13,7 @@
     "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
   ];
 
-  # Enable rebuild-friendly tmp on tmpfs (optional).
+  # Big RAM box → put /tmp on tmpfs (faster builds, less SSD wear).
+  boot.tmp.useTmpfs = true;
   boot.tmp.cleanOnBoot = true;
 }
