@@ -66,9 +66,7 @@ mount -o noatime,compress=zstd,subvol=@log  /dev/nvme0n1p2 /mnt/var/log
 mount /dev/nvme0n1p1 /mnt/boot
 ```
 
-> **ВНИМАНИЕ ESP**: `mkfs.fat` форматирует только `nvme0n1p1` (Arch ESP). Windows ESP — это **отдельный** раздел `sdb1` (UUID `B2B5-674A`), не трогается.
->
-> **НО**: systemd-boot сканирует только тот ESP, который смонтирован в `/boot` (=`nvme0n1p1`). Windows на `sdb1` **в systemd-boot menu НЕ появится** — это нормально. Чтобы загрузиться в Windows: при старте жми UEFI boot menu (обычно **F12 / F11 / F8 / Esc** в зависимости от мат. платы) и выбирай `Windows Boot Manager`. NixOS останется default'ом.
+> **Windows на `/dev/sdb` не трогаем вообще.** Грузишь её через UEFI BIOS boot menu (F-key при старте), Windows entry останется в UEFI как было. NixOS — default.
 
 ## Шаг 2 — установка
 
@@ -85,9 +83,9 @@ cp /mnt/etc/nixos/hardware-configuration.nix /mnt/etc/nixos/hosts/desktop/hardwa
 # Sanity check: should see real /dev/disk/by-uuid/... entries, not PLACEHOLDER
 cat /mnt/etc/nixos/hosts/desktop/hardware-configuration.nix | head -20
 
-# Install. Typically 10–15 min (mostly download). Up to 25–30 min if cache
-# miss and NVIDIA module has to be built locally for a fresh kernel.
-# Not stuck — Alt+F2 → htop to watch.
+# Install. Realistic: 15–30 min. Mostly download (~3-5 GB) + local build of
+# NVIDIA open kernel module against the current kernel. Not stuck — Alt+F2
+# → htop to watch CPU. If it really hangs, Alt+F3 has nixos-install log.
 nixos-install --flake /mnt/etc/nixos#desktop
 
 # At the end nixos-install asks for the root password — set something you remember.
@@ -98,7 +96,7 @@ reboot
 
 ## Шаг 3 — первый boot
 
-1. systemd-boot menu появится с одним пунктом `NixOS`. Выбирай. Windows в этом меню НЕТ (см. предупреждение в шаге 1) — для Windows: ребут → UEFI boot menu (F-key).
+1. systemd-boot menu появится с пунктом `NixOS`. Windows тут не будет — это by design, грузишь её через UEFI BIOS menu отдельно.
 2. После boot: greetd → niri-session запустится автоматически как `endotrizine`.
 3. Если **чёрный экран** при загрузке niri — переключись на TTY (`Ctrl+Alt+F2`), залогинься как root (пароль из шага 2), и:
    ```fish
@@ -137,6 +135,5 @@ NixOS ISO остаётся загрузочным — boot с него, mount в
 - [ ] `~/.ssh`, `~/.gnupg`, browser data забэкаплены **вне** nvme0n1
 - [ ] Список pacman -Qqe сохранён
 - [ ] NixOS ISO записан и проверен (boot с него хоть до menu)
-- [ ] Знаешь UUID Windows ESP (`B2B5-674A` для sdb1) — на случай восстановления Windows boot
 - [ ] `hosts/desktop/hardware-configuration.nix` будет **заменён** сгенерированным перед install (placeholder сам по себе НЕ сработает)
 - [ ] После reboot **сразу** делаешь `passwd` (меняешь `initialPassword`)
