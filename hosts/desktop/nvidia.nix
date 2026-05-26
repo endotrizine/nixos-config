@@ -1,13 +1,17 @@
 { config, pkgs, ... }:
 {
-  # NVIDIA GeForce RTX 3050 (GA106, Ampere) — proprietary driver.
-  # For open-source NVIDIA driver (NVK), set `open = true;`. The proprietary
-  # driver is more battle-tested for niri + Wayland today.
+  # NVIDIA GeForce RTX 3050 (GA106, Ampere). Using NVIDIA's *open kernel
+  # module* (open = true). This is NOT nouveau — it's NVIDIA's own MIT/GPL
+  # kernel module (515+) paired with the proprietary userspace. Recommended
+  # by NVIDIA for Turing+ (incl. Ampere). Better compatibility with bleeding
+  # kernels and faster binary cache hits in nixpkgs.
+  #
+  # If something is broken, flip to proprietary kernel module: `open = false;`.
   services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware.nvidia = {
     modesetting.enable = true;
-    open = false;
+    open = true;
     nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
     powerManagement.enable = false;

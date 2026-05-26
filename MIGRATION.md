@@ -85,9 +85,9 @@ cp /mnt/etc/nixos/hardware-configuration.nix /mnt/etc/nixos/hosts/desktop/hardwa
 # Sanity check: should see real /dev/disk/by-uuid/... entries, not PLACEHOLDER
 cat /mnt/etc/nixos/hosts/desktop/hardware-configuration.nix | head -20
 
-# Install (uses hosts/desktop/, builds NVIDIA module, microcode, all of it)
-# WARNING: NVIDIA kernel module compile + package downloads may take 30–60 minutes.
-# It's not stuck — watch progress with `htop` in another TTY (Alt+F2).
+# Install. Typically 10–15 min (mostly download). Up to 25–30 min if cache
+# miss and NVIDIA module has to be built locally for a fresh kernel.
+# Not stuck — Alt+F2 → htop to watch.
 nixos-install --flake /mnt/etc/nixos#desktop
 
 # At the end nixos-install asks for the root password — set something you remember.
