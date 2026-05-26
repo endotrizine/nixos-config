@@ -1,156 +1,138 @@
-# Миграция на реальное железо
+# Миграция: Arch (хост) → NixOS из конфига
 
-Текущая структура поддерживает несколько хостов из одного `flake.nix`. ВМ
-живёт в `hosts/vm/`. Чтобы добавить реальный десктоп — заведи `hosts/desktop/`
-(имя любое, ниже примеры с `desktop`).
+Конфиг уже знает про целевое железо: `hosts/desktop/` содержит boot, nvidia,
+mounts. Не хватает только `hardware-configuration.nix` — его сгенерирует
+`nixos-generate-config` на install-target.
 
-## Шаг 0 — на текущей машине (Arch-хост)
+## Целевое железо (зафиксировано в `hosts/desktop/`)
 
-1. Закоммить свежее состояние конфига:
+- **CPU**: AMD Ryzen 5 5500 (Zen 3, **нет iGPU** → NVIDIA = единственная графика)
+- **GPU**: NVIDIA RTX 3050 (GA106, Ampere). Драйвер — проприетарный stable.
+- **RAM**: 46 GiB
+- **Boot**: UEFI
+- **Сеть**: Realtek RTL8111 Ethernet (в ядре, работает из коробки). Wi-Fi нет.
+- **Bluetooth**: нет (модуль в конфиге безвреден на холостом ходу).
+- **Диски** (lsblk на момент аудита):
+  - `nvme0n1` 931G — основной (1G EFI + 930G btrfs `@/@home/@.snapshots/@pkg/@log`)
+  - `sda` 223G ext4 → данные `/mnt/storage2` (UUID `e5554191-54f4-475e-b66b-2a5f8eb304e6`)
+  - `sdb` 465G — **Windows 11** (ESP + MSR + NTFS system + NTFS recovery) — **не трогать**
+  - `sdc` 931G ntfs → данные `/mnt/storage1` (UUID `6854BD5954BD2B28`)
 
-```fish
-pushnix     # alias: cd /etc/nixos && git add . && git commit -m 'update' && git push
-```
+## Шаг 0 — ПЕРЕД сносом Arch (СДЕЛАЙ ЭТО)
 
-2. Запушь репо куда-нибудь (GitHub/GitLab) — на новой машине будешь клонить.
+1. Запушь конфиг:
+   ```fish
+   pushnix
+   ```
+2. Бэкап:
+   - `~/.ssh/` (ключи)
+   - `~/.gnupg/` (PGP)
+   - Закладки/пароли браузеров (Zen)
+   - Список manually-installed пакетов pacman: `pacman -Qqe > ~/Документы/arch-pkgs.txt`
+   - Содержимое `/etc/libvirt/qemu/*.xml` (определения ВМ)
+3. Подготовь NixOS ISO на флешку: <https://nixos.org/download> (graphical recommended)
+4. Проверь что у тебя есть пароль от Wi-Fi / интернета на телефоне (если что — будешь гуглить с него)
 
-## Шаг 1 — установка NixOS на железо
+## Шаг 1 — boot с NixOS ISO, разметка
 
-1. Загрузись с NixOS minimal/graphical ISO.
-2. Разметь диск (для современного железа — GPT + ESP). Включи swap по вкусу.
-3. Смонтируй: `/mnt` корень, `/mnt/boot` ESP.
-4. Сгенерируй базовый конфиг (нужен только `hardware-configuration.nix`):
-
-```fish
-sudo nixos-generate-config --root /mnt
-```
-
-5. Склонируй свой репо:
-
-```fish
-sudo nix-shell -p git --run "git clone https://github.com/<user>/<repo> /mnt/etc/nixos-tmp"
-```
-
-## Шаг 2 — заведи новый host
-
-```fish
-cd /mnt/etc/nixos-tmp
-mkdir -p hosts/desktop
-# hardware-configuration.nix, сгенерированный для железа, кладём сюда:
-cp /mnt/etc/nixos/hardware-configuration.nix hosts/desktop/
-```
-
-Создай `hosts/desktop/default.nix` (по образцу `hosts/vm/default.nix`):
-
-```nix
-{ ... }:
-{
-  imports = [
-    ../../modules
-    ./hardware-configuration.nix
-    ./boot.nix
-    ./nvidia.nix     # если NVIDIA
-  ];
-
-  networking.hostName = "desktop";
-  system.stateVersion = "25.11";
-}
-```
-
-`hosts/desktop/boot.nix` — для современного UEFI-десктопа:
-
-```nix
-{ ... }:
-{
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelParams = [ "nvidia-drm.modeset=1" ];  # если NVIDIA
-}
-```
-
-`hosts/desktop/nvidia.nix` (для проприетарного NVIDIA на RTX 3050):
-
-```nix
-{ config, pkgs, ... }:
-{
-  services.xserver.videoDrivers = [ "nvidia" ];
-  hardware.nvidia = {
-    modesetting.enable = true;
-    open = false;                          # legacy proprietary; для open NVK ставь true
-    nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
-    powerManagement.enable = false;
-  };
-}
-```
-
-## Шаг 3 — зарегистрируй хост в flake
-
-В `flake.nix`, в `nixosConfigurations`, добавь строку:
-
-```nix
-nixosConfigurations = {
-  nixos   = mkSystem "vm";
-  desktop = mkSystem "desktop";    # <-- новый
-};
-```
-
-## Шаг 4 — установить
+**КРИТИЧНО**: трогать только `/dev/nvme0n1`. НЕ форматировать `/dev/sda`, `/dev/sdc`. Особенно НЕ ТРОГАТЬ `/dev/sdb` (Windows).
 
 ```fish
-sudo mkdir -p /mnt/etc/nixos
-sudo mv /mnt/etc/nixos-tmp/* /mnt/etc/nixos-tmp/.* /mnt/etc/nixos/ 2>/dev/null
-sudo nixos-install --flake /mnt/etc/nixos#desktop
+sudo -i
+
+# Wipe Arch's nvme0n1 and recreate partitions
+parted /dev/nvme0n1 -- mklabel gpt
+parted /dev/nvme0n1 -- mkpart ESP fat32 1MiB 1025MiB
+parted /dev/nvme0n1 -- set 1 esp on
+parted /dev/nvme0n1 -- mkpart NIXROOT 1025MiB 100%
+
+mkfs.fat -F 32 -n boot /dev/nvme0n1p1
+mkfs.btrfs -L nixos /dev/nvme0n1p2
+
+# Create subvolumes (mirroring Arch layout — minus pacman cruft)
+mount /dev/nvme0n1p2 /mnt
+btrfs subvolume create /mnt/@
+btrfs subvolume create /mnt/@home
+btrfs subvolume create /mnt/@nix
+btrfs subvolume create /mnt/@log
+umount /mnt
+
+# Mount with sane options for SSD btrfs
+mount -o noatime,compress=zstd,subvol=@ /dev/nvme0n1p2 /mnt
+mkdir -p /mnt/{boot,home,nix,var/log}
+mount -o noatime,compress=zstd,subvol=@home /dev/nvme0n1p2 /mnt/home
+mount -o noatime,compress=zstd,subvol=@nix  /dev/nvme0n1p2 /mnt/nix
+mount -o noatime,compress=zstd,subvol=@log  /dev/nvme0n1p2 /mnt/var/log
+mount /dev/nvme0n1p1 /mnt/boot
 ```
 
-После reboot — войдёт `greetd` → `niri-session` (как сейчас в VM).
+> **ВНИМАНИЕ ESP**: команда `mkfs.fat` СТИРАЕТ Windows EFI entries с того же раздела. Если Windows на отдельном ESP (как у тебя — `sdb1`), ничего не трогается. Windows boot manager на `sdb1`, systemd-boot подхватит при `boot.loader.efi.canTouchEfiVariables = true`.
 
-## Шаг 5 — переключение между хостами
+## Шаг 2 — установка
 
 ```fish
-# на VM
-sudo nixos-rebuild switch --flake /etc/nixos#nixos
+# Generate hardware-configuration.nix
+nixos-generate-config --root /mnt
 
-# на десктопе
-sudo nixos-rebuild switch --flake /etc/nixos#desktop
+# Clone your config
+nix-shell -p git --run "git clone https://github.com/endotrizine/nixos-config /mnt/etc/nixos"
+
+# CRITICAL: replace placeholder hardware-config with the generated one
+cp /mnt/etc/nixos/hardware-configuration.nix /mnt/etc/nixos/hosts/desktop/hardware-configuration.nix
+
+# Sanity check: should see real /dev/disk/by-uuid/... entries, not PLACEHOLDER
+cat /mnt/etc/nixos/hosts/desktop/hardware-configuration.nix | head -20
+
+# Install (uses hosts/desktop/, builds NVIDIA module, microcode, all of it)
+nixos-install --flake /mnt/etc/nixos#desktop
+
+# At the end nixos-install asks for the root password — set something you remember.
+# The endotrizine user gets initialPassword="endotrizine" — CHANGE IT on first login.
+
+reboot
 ```
 
-Поправь алиас `rebuild` в `home/aliases.nix` если хочешь чтобы `rebuild`
-автоматически выбирал хост по hostname:
+## Шаг 3 — первый boot
 
-```nix
-rebuild = "sudo nixos-rebuild switch --flake /etc/nixos#$(hostname) |& nom";
-```
+1. systemd-boot menu появится. Выбери `NixOS`. Windows тоже должен быть видим как отдельный entry.
+2. После boot: greetd → niri-session запустится автоматически как `endotrizine`.
+3. Если **чёрный экран** при загрузке niri — переключись на TTY (`Ctrl+Alt+F2`), залогинься как root (пароль из шага 2), и:
+   ```fish
+   journalctl -u greetd -b | tail -50
+   nvidia-smi
+   modprobe nvidia_drm modeset=1
+   ```
+4. Если всё хорошо — открой kitty (есть в `home.packages`) и **смени пароль**:
+   ```fish
+   passwd
+   ```
 
-## Что осталось в `hosts/vm/` и не нужно на железе
+## Шаг 4 — восстановление
 
-- `hosts/vm/boot.nix` — `device=/dev/vda` (virtio-blk), `fbcon=map:99`, `video=virtio:off`. Всё это VM-specific, на железе не переноси.
-- `hosts/vm/vm.nix` — `spice-vdagentd`, `serial-getty@ttyS0` для `virsh console`. Не нужно.
+- SSH ключи: `cp -r /flash/.ssh ~/`
+- gh auth: `gh auth login`
+- git remote уже настроен в склоненом репо
+- Содержимое ВМ: если qcow2 был на `/mnt/storage1` или `/mnt/storage2`, после монтирования дисков (которые работают через `hosts/desktop/mounts.nix`) — просто переподними libvirt:
+  ```fish
+  sudo cp /flash/backup/qemu/*.xml /etc/libvirt/qemu/
+  sudo virsh -c qemu:///system define /etc/libvirt/qemu/<vm>.xml
+  ```
+  Но для этого нужен `virtualisation.libvirtd.enable = true` — в текущем общем модуле его НЕТ. Добавишь после первого успешного boot, или сразу в `hosts/desktop/`.
 
-Общие модули (`modules/*.nix`) — переносимы. Если на железе захочешь
-отключить что-то конкретное (например `services.openssh`), либо правь
-`modules/services.nix`, либо переопределяй в `hosts/desktop/default.nix`:
+## Что не переносится из `hosts/vm/`
 
-```nix
-services.openssh.enable = false;   # override общего модуля
-```
+VM-специфика (`fbcon=map:99`, `video=virtio:off`, grub `/dev/vda`, spice-vdagentd, serial-getty) живёт только в `hosts/vm/`. На железе никогда не активируется — она в `hosts/vm/`, а `desktop` импортирует только `modules/` + `hosts/desktop/*`.
 
-## Что НЕ надо забыть на железе
+## Если что-то совсем плохо
 
-- **NVIDIA**: добавить `nvidia.nix` (см. выше). Без него под Wayland-niri
-  будет чёрный экран или софт-рендер.
-- **Микрокод**: добавь `hardware.cpu.intel.updateMicrocode = true;` или
-  `hardware.cpu.amd.updateMicrocode = true;` в `hosts/desktop/default.nix`.
-- **Firmware**: `hardware.enableRedistributableFirmware = true;`.
-- **Btrfs/LVM/LUKS**: если используешь — `nixos-generate-config` сам
-  заполнит `hardware-configuration.nix`. Проверь что включены нужные
-  `boot.initrd.availableKernelModules` / `luks.devices`.
-- **Сеть Ethernet/Wi-Fi**: NetworkManager уже в общих модулях. Для wpa-eap
-  и сложных кейсов настраивай в `hosts/desktop/`.
-- **Audio**: pipewire в общих модулях, работает из коробки.
+NixOS ISO остаётся загрузочным — boot с него, mount всё как в шаге 1, `nixos-enter --root /mnt` → у тебя shell в установленной системе, можно править `/etc/nixos/...` и `nixos-rebuild boot --flake /etc/nixos#desktop`.
 
-## Сценарий dual-boot с уже установленной системой
+## Чек-лист "не упади в говно"
 
-Если на десктопе уже стоит другая ОС, монтируй её ESP в тот же `/boot`
-куда монтируешь NixOS — `systemd-boot` подхватит. Либо `useOSProber = true`
-если останешься на GRUB.
+- [ ] Конфиг запушен (`pushnix`)
+- [ ] `~/.ssh`, `~/.gnupg`, browser data забэкаплены **вне** nvme0n1
+- [ ] Список pacman -Qqe сохранён
+- [ ] NixOS ISO записан и проверен (boot с него хоть до menu)
+- [ ] Знаешь UUID Windows ESP (`B2B5-674A` для sdb1) — на случай восстановления Windows boot
+- [ ] `hosts/desktop/hardware-configuration.nix` будет **заменён** сгенерированным перед install (placeholder сам по себе НЕ сработает)
+- [ ] После reboot **сразу** делаешь `passwd` (меняешь `initialPassword`)

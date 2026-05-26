@@ -49,7 +49,8 @@
       #   2. Add a line below: <newname> = mkSystem "<newname>";
       #   3. Rebuild: `sudo nixos-rebuild switch --flake /etc/nixos#<newname>`
       nixosConfigurations = {
-        nixos = mkSystem "vm";
+        nixos   = mkSystem "vm";
+        desktop = mkSystem "desktop";
       };
     };
 }
