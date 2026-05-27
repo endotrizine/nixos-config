@@ -19,7 +19,7 @@ with pkgs; [
   wget
   zoxide
 
-  # Dev — core
+  # Dev 
   bun
   deno
   git
@@ -37,23 +37,23 @@ with pkgs; [
   tealdeer
   zed-editor
 
-  # Dev — Python
+  # Python
   uv
   ruff
   pyright
 
-  # Dev — frontend
+  # frontend
   pnpm
 
-  # Dev — utils
+  #  utils
   httpie
 
   # Terminals
   foot
   kitty
 
-  # Editors / IDE
-  lapce
+  # Editors
+	lapce
 
   # File managers
   kdePackages.dolphin
@@ -72,6 +72,7 @@ with pkgs; [
   pavucontrol
   playerctl
   yt-dlp
+  alsa-utils	
 
   # Archives / files
   p7zip
@@ -104,7 +105,14 @@ with pkgs; [
   libqalculate
   translate-shell
   wlsunset
-  cloudflare-warp
+  clash-verge-rev
 
-	clash-verge-rev
+	discord
+	equicord
+	ayugram-desktop
+
+	# Font 
+	geist-font
+
+	bibata-cursors
 ]

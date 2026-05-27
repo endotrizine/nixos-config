@@ -1,5 +1,4 @@
 {
-  # Uses current hostname → picks VM (`nixos`) or desktop (`desktop`) automatically.
   rebuild = "sudo -v; and sudo nixos-rebuild switch --flake /etc/nixos#(hostname) |& nom";
   rebuild-dry = "sudo nixos-rebuild dry-build --flake /etc/nixos#(hostname)";
   nix-clean = "sudo nix-collect-garbage -d";
@@ -30,4 +29,5 @@
   c = "clear";
   ports = "ss -tulanp";
   hp = "nvim /etc/nixos/home/packages.nix";
+	nixedit = "nvim /etc/nixos/";
 }

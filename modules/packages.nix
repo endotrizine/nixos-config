@@ -10,17 +10,19 @@
     xdg-desktop-portal-gtk
     xdg-desktop-portal-gnome
 
-    # Graphics / audio (system level)
+    # Graphics / audio 
     pipewire
     wayland
     libdrm
     mesa
+		pulseaudio
+		pulseaudio-ctl
 
-    # Browser (from flake input)
+    # Browser 
     inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 
-    # Qt6 (needed system-wide for Noctalia / Quickshell)
-    qt6.qtdeclarative
+    # Qt6    
+		qt6.qtdeclarative
     qt6.qtbase
     qt6.qtsvg
     qt6.qtwayland
@@ -55,7 +57,7 @@
     quickshell
     noctalia-shell
 
-    # Shell convenience also wanted system-wide
+    # Shell 
     starship
     bat
     btop

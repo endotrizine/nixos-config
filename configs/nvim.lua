@@ -130,20 +130,16 @@ lazy.setup({
   {'tpope/vim-fugitive'},
 
   -- Code manipulation
-  -- В списке плагинов для Lazy
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     config = function()
-      -- Пытаемся безопасно загрузить модуль
       local status_ok, ts_configs = pcall(require, "nvim-treesitter.configs")
       
-      -- Если файлов еще нет, тихо прерываем выполнение функции
       if not status_ok then
         return
       end
 
-      -- Если всё ок, применяем ваши настройки
       ts_configs.setup({
         highlight = {
           enable = true,
@@ -216,15 +212,14 @@ vim.opt.showmode = false
 
 require('lualine').setup({
   options = {
-    theme = 'catppuccin-mocha', -- Меняем тему на catppuccin
-    icons_enabled = true,
-    -- Используем более мягкие или пустые разделители для минимализма
+    theme = 'catppuccin-mocha',    
+		icons_enabled = true,
     component_separators = { left = '', right = '' }, 
     section_separators = { left = '', right = '' },
     disabled_filetypes = {
       statusline = {'NvimTree'}
     },
-    globalstatus = true, -- Один статусбар на все окна (рекомендую для красоты)
+    globalstatus = true, 
   },
   sections = {
     lualine_a = {'mode'},
@@ -232,8 +227,8 @@ require('lualine').setup({
     lualine_c = {
       {
         'filename',
-        file_status = true, -- Отображает статус (изменен/только чтение)
-        path = 1,           -- 1: Отображает относительный путь
+        file_status = true, 
+        path = 1,           
       }
     },
     lualine_x = {'encoding', 'fileformat', 'filetype'},
@@ -266,8 +261,8 @@ require('bufferline').setup({
       fg = {attribute = 'fg', highlight = 'Function'},
       italic = false
     }
-  } -- ВОТ ЭТА СКОБКА БЫЛА ПРОПУЩЕНА (закрывает highlights)
-})  -- И ВОТ ЭТИ СКОБКИ БЫЛИ ПРОПУЩЕНЫ (закрывают setup)
+  } 
+})  
 
 ---
 -- Comment.nvim
@@ -366,14 +361,11 @@ require('toggleterm').setup({
 ---
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
--- Настраиваем nixd через новый встроенный API
 vim.lsp.config('nixd', {
   install = {
-    -- lspconfig всё еще подсказывает Neovim, где искать бинарник
     cmd = { "nixd" },
   },
   capabilities = capabilities,
-  -- Здесь можно добавить настройки для nixd (formatting, options и т.д.)
   settings = {
     nixd = {
       formatting = { command = { "nixpkgs-fmt" } },
@@ -381,7 +373,6 @@ vim.lsp.config('nixd', {
   },
 })
 
--- Включаем его
 vim.lsp.enable('nixd')
 ---
 -- nvim-cmp

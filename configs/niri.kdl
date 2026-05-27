@@ -6,12 +6,17 @@
 // Input device configuration.
 // Find the full list of options on the wiki:
 // https://yalter.github.io/niri/Configuration:-Input
+cursor {
+    xcursor-theme "Bibata-Modern-Classic"
+    xcursor-size 24
+}
+
 input {
+	  focus-follows-mouse max-scroll-amount="0%"
+
     keyboard {
         xkb {
-            // Добавляем обе раскладки. Первой ставим us, чтобы хоткеи работали предсказуемо.
             layout "us,ru"
-            // Переключение по Caps Lock или Alt+Shift (выбери что нравится)
             options "grp:alt_shift_toggle" 
         }
         numlock
@@ -36,8 +41,8 @@ input {
     mouse {
         // off
         // natural-scroll
-        // accel-speed 0.2
-        // accel-profile "flat"
+        accel-speed 0
+        accel-profile "flat"
         // scroll-method "no-scroll"
     }
 
@@ -66,14 +71,20 @@ input {
 // Find more information on the wiki:
 // https://yalter.github.io/niri/Configuration:-Outputs
 // Remember to uncomment the node by removing "/-"!
-output "Virtual-1" {
-    // Ставь разрешение своего физического монитора
-    mode "1920x1080" 
-    // Масштаб 1, чтобы не было гигантских окон
+output "DP-1" {
+    mode "1920x1080@100" 
     scale 1
-    // Убираем фиксированную позицию, пусть niri сам решит
+		position x=0 y=0
 }
-
+output "DP-3" {
+	mode "2560x1440@165"
+	position x=1920 y=0
+	//variable-refresh-rate "true"
+}
+output "HDMI-A-1" {
+	mode "1920x1080@74"
+	position x=4480 y=0 
+}
 // Settings that influence how windows are positioned and sized.
 // Find more information on the wiki:
 // https://yalter.github.io/niri/Configuration:-Layout
