@@ -62,7 +62,7 @@ folder = [
 [open]
 rules = [
 	# Folder
-	{ name = "*/", use = [ "folder" ] },
+	{ name = "*/", use = [ "folder", "reveal" ] },
 	# Text
 	{ mime = "text/*", use = [ "edit", "reveal" ] },
 	# Image

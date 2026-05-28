@@ -1,9 +1,8 @@
-{ ... }:
+{ pkgs, ... }:
 {
-  programs.starship = {
-    enable = true;
-    enableFishIntegration = true;
-  };
+  programs.fish.interactiveShellInit = ''
+    ${pkgs.starship}/bin/starship init fish | source
+  '';
 
-  #xdg.configFile."starship.toml".source = ../../configs/starship.toml;
+  xdg.configFile."starship.toml".source = ../../configs/starship.toml;
 }

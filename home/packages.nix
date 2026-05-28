@@ -20,8 +20,6 @@ with pkgs; [
   zoxide
 
   # Dev 
-  bun
-  deno
   git
   gh
   lazygit
@@ -29,24 +27,17 @@ with pkgs; [
   nixd
   nixfmt
   nix-output-monitor
-  nodejs
-  ollama
   python3
-  python3Packages.evdev
-  python3Packages.pillow
   tealdeer
   zed-editor
 
   # Python
-  uv
-  ruff
-  pyright
 
   # frontend
-  pnpm
 
   #  utils
   httpie
+	nix-direnv
 
   # Terminals
   foot
@@ -107,8 +98,6 @@ with pkgs; [
   wlsunset
   clash-verge-rev
 
-	discord
-	equicord
 	ayugram-desktop
 
 	# Font 

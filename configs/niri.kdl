@@ -89,6 +89,19 @@ output "HDMI-A-1" {
 // Find more information on the wiki:
 // https://yalter.github.io/niri/Configuration:-Layout
 
+layer-rule {
+    // This is for swaybg; change for other wallpaper tools.
+    // Find the right namespace by running niri msg layers.
+    match namespace="wallpaper"
+    place-within-backdrop true
+}
+
+overview {
+		workspace-shadow {
+        off
+    }
+}
+
 layout {
     // Gap between windows and from windows to screen edges (logical px).
     gaps 25
@@ -100,7 +113,7 @@ layout {
     //   "never"       — keep the focused column at the left or right edge (default)
     //   "on-overflow" — center only if both the old and new column don't fit on screen
     //   "always"      — always center the focused column
-    center-focused-column "always"
+    center-focused-column "on-overflow"
 
     // Keep a lone column from hugging the left edge on empty workspaces.
     always-center-single-column
@@ -174,7 +187,7 @@ layout {
         inactive-color "#45475a"
 
         // Color of the border around windows that request your attention.
-        urgent-color "#9b0000"
+        urgent-color "#cba6f7"
 
         // Gradients can use a few different interpolation color spaces.
         //  m, this is a pastel rainbow gradient via in="oklch longer hue".
@@ -443,10 +456,8 @@ binds {
     Mod+Ctrl+Right { focus-monitor-right; }
     Mod+Ctrl+Up    { focus-workspace-up; }
     Mod+Ctrl+Down  { focus-workspace-down; }
-    Mod+Ctrl+Shift+Left  { move-column-to-monitor-left; }
-    Mod+Ctrl+Shift+Right { move-column-to-monitor-right; }
-    Mod+Ctrl+Shift+Up    { move-column-to-monitor-up; }
-    Mod+Ctrl+Shift+Down  { move-column-to-monitor-down; }
+    Mod+Alt+Left  { move-column-to-monitor-left; }
+    Mod+Alt+Right { move-column-to-monitor-right; }
     Mod+Alt+Down { move-column-to-workspace-down; }
     Mod+Alt+Up   { move-column-to-workspace-up; }
 
@@ -481,7 +492,8 @@ binds {
     Mod+WheelScrollLeft  { focus-column-left; }
 
     // ─── Screenshots (native niri) ───
-    Print      { screenshot; }
-    Ctrl+Print { screenshot-screen; }
-    Alt+Print  { screenshot-window; }
+    Print       { screenshot; }
+		Mod+Shift+S { screenshot; }
+    Ctrl+Print  { screenshot-screen; }
+    Alt+Print   { screenshot-window; }
 }

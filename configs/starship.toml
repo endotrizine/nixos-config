@@ -1,134 +1,341 @@
-palette = "ii"
+# ~/.config/starship.toml
+"$schema" = 'https://starship.rs/config-schema.json'
 
-# Don't print a new line at the start of the prompt
-add_newline = false
-# Pipes ╰─ ╭─
-# Powerline symbols                                     
-# Wedges 🭧🭒 🭣🭧🭓
-# Random noise 🬖🬥🬔🬗
-# Cool stuff 󰜥   
+add_newline = true
+palette = "catppuccin_mocha"   # ← переключай тут: catppuccin_mocha / catppuccin_macchiato / catppuccin_frappe / catppuccin_latte / ii
+command_timeout = 1000
+scan_timeout = 30
 
-# format = """
-# $cmd_duration$username$hostname $directory $git_branch
-# $character
-# """
 format = """
-$cmd_duration 󰜥 $directory $git_branch
+$os\
+$directory\
+$git_branch\
+$git_status\
+$git_state\
+$fill\
+$nodejs$python$rust$golang$lua$java$ruby$nix_shell\
+$cmd_duration\
+$line_break\
 $character"""
 
-# Replace the "❯" symbol in the prompt with "➜"
-[character]                            # The name of the module we are configuring is "character"
-success_symbol = "[   ](bold fg:blue)"
-error_symbol = "[   ](bold fg:red)"
+right_format = """$time"""
 
-# Disable the package module, hiding it from the prompt completely
-[package]
-disabled = true
+[fill]
+symbol = " "
 
+# ─── Character ───────────────────────────────────────────
+[character]
+success_symbol = "[❯](bold fg:accent)"
+error_symbol   = "[❯](bold fg:error)"
+vimcmd_symbol  = "[❮](bold fg:success)"
+
+# ─── OS ──────────────────────────────────────────────────
+[os]
+disabled = false
+format = "[$symbol](fg:muted) "
+
+[os.symbols]
+Arch     = "󰣇"
+NixOS    = "󱄅"
+Ubuntu   = ""
+Debian   = ""
+Fedora   = ""
+Macos    = ""
+Linux    = ""
+Manjaro  = ""
+Mint     = "󰣭"
+Windows  = "󰍲"
+
+# ─── Directory ───────────────────────────────────────────
+[directory]
+style = "bold fg:info"
+truncation_length = 3
+truncation_symbol = "…/"
+read_only = " 󰌾"
+read_only_style = "fg:error"
+format = "[$path]($style)[$read_only]($read_only_style)"
+home_symbol = "~"
+
+# ─── Git ─────────────────────────────────────────────────
 [git_branch]
-style = "bg: cyan"
-symbol = "󰘬"
-truncation_length = 12
-truncation_symbol = ""
-format = "󰜥 [](bold fg:cyan)[$symbol $branch(:$remote_branch)](fg:black bg:cyan)[ ](bold fg:cyan)"
-
-[git_commit]
-commit_hash_length = 4
-tag_symbol = " "
-
-[git_state]
-format = '[\($state( $progress_current of $progress_total)\)]($style) '
-cherry_pick = "[🍒 PICKING](bold red)"
+symbol = " "
+style = "fg:accent"
+format = "  [$symbol$branch]($style)"
 
 [git_status]
-conflicted = " 🏳 "
-ahead = " 🏎💨 "
-behind = " 😰 "
-diverged = " 😵 "
-untracked = " 🤷 ‍"
-stashed = " 📦 "
-modified = " 📝 "
-staged = '[++\($count\)](green)'
-renamed = " ✍️ "
-deleted = " 🗑 "
+style = "fg:warning"
+format = "[ $all_status$ahead_behind]($style)"
+conflicted = "="
+ahead      = "⇡${count}"
+behind     = "⇣${count}"
+diverged   = "⇕⇡${ahead_count}⇣${behind_count}"
+up_to_date = ""
+untracked  = "?${count}"
+stashed    = "*${count}"
+modified   = "!${count}"
+staged     = "+${count}"
+renamed    = "»${count}"
+deleted    = "✘${count}"
 
-[hostname]
-ssh_only = false
-format =  "[•$hostname](bg:cyan bold fg:black)[](bold fg:cyan)"
-trim_at = ".companyname.com"
+[git_state]
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+style = "fg:warning"
+
+# ─── Languages ───────────────────────────────────────────
+[nodejs]
+symbol = " "
+format = "[$symbol($version )]($style)"
+style = "fg:success"
+
+[python]
+symbol = " "
+format = '[${symbol}${pyenv_prefix}(${version})( \($virtualenv\) )]($style)'
+style = "fg:warning"
+
+[rust]
+symbol = "󱘗 "
+format = "[$symbol($version )]($style)"
+style = "fg:error"
+
+[golang]
+symbol = " "
+format = "[$symbol($version )]($style)"
+style = "fg:info"
+
+[lua]
+symbol = " "
+format = "[$symbol($version )]($style)"
+style = "fg:info"
+
+[java]
+symbol = " "
+format = "[${symbol}(${version} )]($style)"
+style = "fg:error"
+
+[ruby]
+symbol = " "
+format = "[$symbol($version )]($style)"
+style = "fg:error"
+
+[nix_shell]
+symbol = "󱄅 "
+format = '[$symbol$state( \($name\) )]($style)'
+style = "fg:info"
+
+# ─── Cmd duration ────────────────────────────────────────
+[cmd_duration]
+min_time = 2000
+format = "[ 󰔛 $duration]($style)"
+style = "fg:muted italic"
+
+# ─── Right side ──────────────────────────────────────────
+[time]
 disabled = false
+time_format = "%H:%M"
+format = "[$time]($style)"
+style = "fg:muted"
 
+# ─── Quiet by default ────────────────────────────────────
+[package]
+disabled = true
+[memory_usage]
+disabled = true
+[battery]
+disabled = true
+[hostname]
+ssh_only = true
+format = "[@$hostname]($style) "
+style = "fg:muted"
+[username]
+show_always = false
+format = "[$user]($style) "
+style = "fg:muted"
 [line_break]
 disabled = false
 
-[memory_usage]
-disabled = true
-threshold = -1
-symbol = " "
-style = "bold dimmed green"
+# ═════════════════════════════════════════════════════════
+# Палитры. Каждая определяет одни и те же семантические
+# имена: accent / success / warning / error / info / muted.
+# Чтобы сменить тему — только строка `palette = "..."` сверху.
+# ═════════════════════════════════════════════════════════
 
-[time]
-disabled = true
-format = '🕙[\[ $time \]]($style) '
-time_format = "%T"
+[palettes.catppuccin_mocha]
+accent  = "#cba6f7"   # mauve
+success = "#a6e3a1"   # green
+warning = "#fab387"   # peach
+error   = "#f38ba8"   # red
+info    = "#89b4fa"   # blue
+muted   = "#7f849c"   # overlay1
+fg      = "#cdd6f4"
+bg      = "#1e1e2e"
+rosewater = "#f5e0dc"
+flamingo  = "#f2cdcd"
+pink      = "#f5c2e7"
+mauve     = "#cba6f7"
+red       = "#f38ba8"
+maroon    = "#eba0ac"
+peach     = "#fab387"
+yellow    = "#f9e2af"
+green     = "#a6e3a1"
+teal      = "#94e2d5"
+sky       = "#89dceb"
+sapphire  = "#74c7ec"
+blue      = "#89b4fa"
+lavender  = "#b4befe"
+text      = "#cdd6f4"
+subtext1  = "#bac2de"
+subtext0  = "#a6adc8"
+overlay2  = "#9399b2"
+overlay1  = "#7f849c"
+overlay0  = "#6c7086"
+surface2  = "#585b70"
+surface1  = "#45475a"
+surface0  = "#313244"
+base      = "#1e1e2e"
+mantle    = "#181825"
+crust     = "#11111b"
 
-[username]
-style_user = "bold bg:cyan fg:black"
-style_root = "red bold"
-format = "[](bold fg:cyan)[$user]($style)"
-disabled = false
-show_always = true
+[palettes.catppuccin_macchiato]
+accent  = "#c6a0f6"
+success = "#a6da95"
+warning = "#f5a97f"
+error   = "#ed8796"
+info    = "#8aadf4"
+muted   = "#8087a2"
+fg      = "#cad3f5"
+bg      = "#24273a"
+rosewater = "#f4dbd6"
+flamingo  = "#f0c6c6"
+pink      = "#f5bde6"
+mauve     = "#c6a0f6"
+red       = "#ed8796"
+maroon    = "#ee99a0"
+peach     = "#f5a97f"
+yellow    = "#eed49f"
+green     = "#a6da95"
+teal      = "#8bd5ca"
+sky       = "#91d7e3"
+sapphire  = "#7dc4e4"
+blue      = "#8aadf4"
+lavender  = "#b7bdf8"
+text      = "#cad3f5"
+subtext1  = "#b8c0e0"
+subtext0  = "#a5adcb"
+overlay2  = "#939ab7"
+overlay1  = "#8087a2"
+overlay0  = "#6e738d"
+surface2  = "#5b6078"
+surface1  = "#494d64"
+surface0  = "#363a4f"
+base      = "#24273a"
+mantle    = "#1e2030"
+crust     = "#181926"
 
-[directory]
-home_symbol = "  "
-read_only = "  "
-style = "bg:green fg:black"
-truncation_length = 6
-truncation_symbol = " ••/"
-format = '[](bold fg:green)[󰉋 $path]($style)[](bold fg:green)'
+[palettes.catppuccin_frappe]
+accent  = "#ca9ee6"
+success = "#a6d189"
+warning = "#ef9f76"
+error   = "#e78284"
+info    = "#8caaee"
+muted   = "#838ba7"
+fg      = "#c6d0f5"
+bg      = "#303446"
+rosewater = "#f2d5cf"
+flamingo  = "#eebebe"
+pink      = "#f4b8e4"
+mauve     = "#ca9ee6"
+red       = "#e78284"
+maroon    = "#ea999c"
+peach     = "#ef9f76"
+yellow    = "#e5c890"
+green     = "#a6d189"
+teal      = "#81c8be"
+sky       = "#99d1db"
+sapphire  = "#85c1dc"
+blue      = "#8caaee"
+lavender  = "#babbf1"
+text      = "#c6d0f5"
+subtext1  = "#b5bfe2"
+subtext0  = "#a5adce"
+overlay2  = "#949cbb"
+overlay1  = "#838ba7"
+overlay0  = "#737994"
+surface2  = "#626880"
+surface1  = "#51576d"
+surface0  = "#414559"
+base      = "#303446"
+mantle    = "#292c3c"
+crust     = "#232634"
 
+[palettes.catppuccin_latte]
+accent  = "#8839ef"
+success = "#40a02b"
+warning = "#fe640b"
+error   = "#d20f39"
+info    = "#1e66f5"
+muted   = "#8c8fa1"
+fg      = "#4c4f69"
+bg      = "#eff1f5"
+rosewater = "#dc8a78"
+flamingo  = "#dd7878"
+pink      = "#ea76cb"
+mauve     = "#8839ef"
+red       = "#d20f39"
+maroon    = "#e64553"
+peach     = "#fe640b"
+yellow    = "#df8e1d"
+green     = "#40a02b"
+teal      = "#179299"
+sky       = "#04a5e5"
+sapphire  = "#209fb5"
+blue      = "#1e66f5"
+lavender  = "#7287fd"
+text      = "#4c4f69"
+subtext1  = "#5c5f77"
+subtext0  = "#6c6f85"
+overlay2  = "#7c7f93"
+overlay1  = "#8c8fa1"
+overlay0  = "#9ca0b0"
+surface2  = "#acb0be"
+surface1  = "#bcc0cc"
+surface0  = "#ccd0da"
+base      = "#eff1f5"
+mantle    = "#e6e9ef"
+crust     = "#dce0e8"
 
-[directory.substitutions]
-"Desktop" = "  "
-"Documents" = "  "
-"Downloads" = "  "
-"Music" = " 󰎈 "
-"Pictures" = "  "
-"Videos" = "  "
-"GitHub" = " 󰊤 "
-
-[cmd_duration]
-min_time = 0
-format = '[](bold fg:yellow)[󰪢 $duration](bold bg:yellow fg:black)[](bold fg:yellow)'
-
-# Auto-generated by ii wallpaper theming system
-# Do not edit manually - changes will be overwritten
-# This file provides Material You colors to your Starship prompt
-
+# ─── ii (Material You, auto-generated by wallpaper theming) ─
 [palettes.ii]
-primary = '#ccb6e7'
-onPrimary = '#21212b'
-secondary = '#ebcce2'
-onSecondary = '#21212b'
-tertiary = '#a4d2cb'
-onTertiary = '#21212b'
-surface = '#21212b'
-onSurface = '#d5daec'
-background = '#1B1B22'
-foreground = '#D5DAEC'
-black = '#1B1B22'
-red = '#C3728F'
-green = '#72AF96'
-yellow = '#AA9872'
-blue = '#7286C2'
-magenta = '#C372C0'
-cyan = '#63B5B9'
-white = '#C1C6D7'
-bright_black = '#717481'
-bright_red = '#F580A2'
-bright_green = '#80F5AA'
-bright_yellow = '#F5BD80'
-bright_blue = '#80AFF5'
+accent  = "#ccb6e7"   # primary
+success = "#72AF96"   # green
+warning = "#AA9872"   # yellow
+error   = "#C3728F"   # red
+info    = "#7286C2"   # blue
+muted   = "#717481"   # bright_black
+fg      = "#D5DAEC"
+bg      = "#1B1B22"
+primary        = '#ccb6e7'
+onPrimary      = '#21212b'
+secondary      = '#ebcce2'
+onSecondary    = '#21212b'
+tertiary       = '#a4d2cb'
+onTertiary     = '#21212b'
+surface        = '#21212b'
+onSurface      = '#d5daec'
+background     = '#1B1B22'
+foreground     = '#D5DAEC'
+black          = '#1B1B22'
+red            = '#C3728F'
+green          = '#72AF96'
+yellow         = '#AA9872'
+blue           = '#7286C2'
+magenta        = '#C372C0'
+cyan           = '#63B5B9'
+white          = '#C1C6D7'
+bright_black   = '#717481'
+bright_red     = '#F580A2'
+bright_green   = '#80F5AA'
+bright_yellow  = '#F5BD80'
+bright_blue    = '#80AFF5'
 bright_magenta = '#F580F2'
-bright_cyan = '#80EDF5'
-bright_white = '#D5DAEC'
+bright_cyan    = '#80EDF5'
+bright_white   = '#D5DAEC'

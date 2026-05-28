@@ -342,9 +342,22 @@ require('nvim-tree').setup({
     bufmap('gh', api.tree.toggle_hidden_filter, 'Toggle hidden files')
   end
 })
-
-vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeToggle<cr>')
-
+vim.api.nvim_create_autocmd("QuitPre", {
+  callback = function()
+    local wins = vim.api.nvim_list_wins()
+    local tree_wins = {}
+    for _, w in ipairs(wins) do
+      if vim.bo[vim.api.nvim_win_get_buf(w)].filetype == "NvimTree" then
+        table.insert(tree_wins, w)
+      end
+    end
+    if #wins - #tree_wins == 1 then
+      for _, w in ipairs(tree_wins) do
+        vim.api.nvim_win_close(w, true)
+      end
+    end
+  end,
+})
 
 ---
 -- toggleterm

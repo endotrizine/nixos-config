@@ -8,7 +8,7 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
+		nixcord.url = "github:FlameFlag/nixcord";
     noctalia-shell.url = "github:noctalia-dev/noctalia-shell";
 
     zen-browser = {
@@ -17,7 +17,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, noctalia-shell, zen-browser, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, noctalia-shell, nixcord, ... }@inputs:
     let
       mkSystem = host: nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
