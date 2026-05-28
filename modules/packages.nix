@@ -20,6 +20,7 @@
 
     # Browser 
     inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+		firefox
 
     # Qt6    
 		qt6.qtdeclarative

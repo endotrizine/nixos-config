@@ -398,8 +398,8 @@ binds {
 
     // ─── Shell overlays (Noctalia IPC) ───
     Mod+Space repeat=false { spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
-    Mod+V { spawn "noctalia-shell" "ipc" "call" "clipboard" "toggle"; }
-    Mod+Alt+L allow-when-locked=true { spawn "noctalia-shell" "ipc" "call" "lockScreen" "lock"; }
+    Mod+V { spawn "sh" "-c" "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
+		Mod+Alt+L allow-when-locked=true { spawn "noctalia-shell" "ipc" "call" "lockScreen" "lock"; }
     Mod+Comma { spawn "noctalia-shell" "ipc" "call" "settings" "toggle"; }
 
     // ─── App launchers ───
