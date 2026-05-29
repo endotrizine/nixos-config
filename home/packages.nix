@@ -104,4 +104,6 @@ with pkgs; [
 	geist-font
 
 	bibata-cursors
+
+	bitwarden-desktop
 ]

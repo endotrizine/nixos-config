@@ -406,7 +406,7 @@ binds {
     Mod+T { spawn "kitty"; }
     Mod+Return { spawn "kitty"; }
     Super+E { spawn "nautilus"; }
-    Super+W { spawn "zen"; }
+    Super+W { spawn "firefox"; }
 
     // ─── Window management ───
     Mod+Q repeat=false { close-window; }
