@@ -16,4 +16,10 @@ in
     end
     rm -f -- "$tmp"
   '';
+  programs.fish.interactiveShellInit = ''
+    bind \ej history-search-forward
+    bind \ek history-search-backward
+    bind \eh backward-char
+    bind \el forward-char
+  '';
 }

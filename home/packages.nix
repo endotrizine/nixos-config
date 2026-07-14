@@ -106,4 +106,6 @@ with pkgs; [
 	bibata-cursors
 
 	bitwarden-desktop
+
+	superfile
 ]

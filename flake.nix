@@ -21,7 +21,7 @@
     let
       mkSystem = host: nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
+        specialArgs = { inherit inputs host; };
         modules = [
           (./hosts + "/${host}")
           noctalia-shell.nixosModules.default
@@ -30,7 +30,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = { inherit inputs; };
+            home-manager.extraSpecialArgs = { inherit inputs host; };
             home-manager.users.endotrizine = {
 						  imports = [
 						    ./home/default.nix
@@ -51,6 +51,7 @@
       nixosConfigurations = {
         nixos   = mkSystem "vm";
         desktop = mkSystem "desktop";
+        t14     = mkSystem "t14";
       };
     };
 }

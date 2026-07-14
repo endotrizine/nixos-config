@@ -13,10 +13,10 @@ vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = false
 vim.opt.signcolumn = 'yes'
-
+vim.opt.clipboard = "unnamedplus"
 -- Space as leader key
 vim.g.mapleader = ' '
-
+vim.opt.virtualedit = "onemore"
 -- Shortcuts
 vim.keymap.set({'n', 'x', 'o'}, '<leader>h', '^')
 vim.keymap.set({'n', 'x', 'o'}, '<leader>l', 'g_')

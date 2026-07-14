@@ -18,7 +18,7 @@
   console.font = "cyr-sun16";
 
   services.xserver.xkb = {
-    layout = "ru";
+    layout = "us,ru";
     variant = "";
   };
 }

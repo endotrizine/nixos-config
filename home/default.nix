@@ -1,7 +1,7 @@
 { pkgs, inputs, ... }:
 {
   imports = [
-		inputs.nixcord.homeModules.nixcord
+ 		inputs.nixcord.homeModules.nixcord
     ./programs/fish.nix
     ./programs/kitty.nix
     ./programs/fuzzel.nix
@@ -12,7 +12,7 @@
     ./programs/niri.nix
     ./programs/neovim.nix
 		./programs/direnv.nix
-		./programs/discord.nix
+ 		./programs/discord.nix
   ];
 
   home.username = "endotrizine";
