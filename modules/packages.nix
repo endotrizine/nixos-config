@@ -64,5 +64,11 @@
     btop
     eza
     fish
-  ];
+
+		# something for the vms from wiki idk
+		dnsmasq
+		spice-vdagent
+  
+		dconf
+	];
 }

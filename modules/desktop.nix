@@ -46,4 +46,5 @@
   
 	# pohui
 	fonts.packages = with pkgs; [ geist-font ];
+	programs.dconf.enable = true;
 }

@@ -13,6 +13,7 @@
     ./programs/neovim.nix
 		./programs/direnv.nix
  		./programs/discord.nix
+		./theme.nix
   ];
 
   home.username = "endotrizine";
@@ -22,16 +23,4 @@
   home.packages = import ./packages.nix { inherit pkgs; };
 
   programs.home-manager.enable = true;
-	catppuccin = {
-  	enable = true;
-  	flavor = "mocha";
-	};
-	catppuccin.cache.enable = true;
-	home.pointerCursor = {
-  	gtk.enable = true;
-  	x11.enable = true;
-  	name = "Bibata-Modern-Classic";
-  	package = pkgs.bibata-cursors;
-  	size = 24;
-	};
 }

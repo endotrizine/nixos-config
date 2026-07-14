@@ -1,6 +1,5 @@
 { pkgs, ... }:
 {
-  hardware.graphics.enable = true;
 
   fonts.packages = with pkgs; [
     fontconfig
@@ -10,4 +9,8 @@
     nerd-fonts.symbols-only
     twemoji-color-font
   ];
+	hardware.graphics = {
+  	enable = true;
+  	extraPackages = with pkgs; [ libva libva-vdpau-driver libvdpau-va-gl ];
+	};
 }

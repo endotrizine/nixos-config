@@ -1,7 +1,20 @@
 { pkgs, ...}:
 {
-  boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.enable = false;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  boot.loader.grub = {
+    enable = true;
+    device = "nodev";
+    efiSupport = true;
+    configurationLimit = 10;
+  };
+
+  catppuccin.grub = {
+    enable = true;
+    flavor = "mocha";
+  };
+
   boot.plymouth = {
     enable = true;
     theme = "nixos-bgrt";

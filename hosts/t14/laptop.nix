@@ -5,25 +5,37 @@
   services.logind.settings.Login.HandleLidSwitch = "suspend";
   services.libinput.enable = true;
   services.libinput.touchpad.tapping = true;
-	# Включаем службу сканера отпечатков пальцев
 	services.fprintd.enable = true;
 
-	# Настройки PAM для авторизации
 	security.pam.services = {
-  	# Вход в систему (консоль, дисплейные менеджеры)
   	login.fprintAuth = true;
   
-  	# Команда sudo в терминале
   	sudo.fprintAuth = true;
 
-  	# Если вы используете графический экран блокировки (например, GDM, SDDM, Swaylock, i3lock), 
-  	# для него тоже можно включить, раскомментировав нужную строку ниже:
-  	# gdm-fingerprint.fprintAuth = true;  # Для GNOME (GDM)
-  	# kde.fprintAuth = true;              # Для KDE (SDDM)
-  	# swaylock.fprintAuth = true;         # Для Sway
   };
-	# Разрешаем несвободные прошивки (essential для ThinkPad)
   nixpkgs.config.allowUnfree = true;
   hardware.enableAllFirmware = true;
-  # Включаем обновление микрокода процессора (тоже подтянет нужные драйверы)
+
+	services.tlp.settings = {
+  	CPU_SCALING_GOVERNOR_ON_AC = "performance";
+  	CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+  	CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+  	CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+  	CPU_MAX_PERF_ON_BAT = 60;
+  	START_CHARGE_THRESH_BAT0 = 40;
+  	STOP_CHARGE_THRESH_BAT0 = 80;
+  	RUNTIME_PM_ON_AC = "auto";
+  	RUNTIME_PM_ON_BAT = "auto";
+	};
+
+	zramSwap = {
+  	enable = true;
+  	algorithm = "zstd";
+  	memoryPercent = 60;
+  	priority = 100;
+	};
+	boot.kernel.sysctl."vm.swappiness" = 100;
+	systemd.oomd.enable = true;
+
+	services.fwupd.enable = true;
 }

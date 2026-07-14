@@ -11,5 +11,6 @@
     ./services.nix
     ./nix-settings.nix
     ./packages.nix
+		./virtualization.nix
   ];
 }

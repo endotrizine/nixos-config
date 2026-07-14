@@ -5,6 +5,7 @@
     ./hardware-configuration.nix
     ./boot.nix
     ./laptop.nix
+		./modules.nix
   ];
    
   networking.hostName = "t14";

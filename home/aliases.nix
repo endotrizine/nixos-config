@@ -1,8 +1,11 @@
 {
-  rebuild = "sudo -v; and sudo nixos-rebuild switch --flake /etc/nixos#(hostname) |& nom";
-  rebuild-dry = "sudo nixos-rebuild dry-build --flake /etc/nixos#(hostname)";
-  nix-clean = "sudo nix-collect-garbage -d";
-  nix-update = "sudo nix flake update /etc/nixos";
+  rebuild = "nh os switch";
+  
+  rebuild-dry = "nh os test";
+  
+  nix-clean = "nh clean all --keep 3 --keep-since 7d";
+  
+  nix-update = "nix flake update --flake /etc/nixos";
 
   l = "eza -lah";
   ls = "eza";
@@ -23,11 +26,11 @@
   gd = "git diff";
 
   v = "nvim";
-  vi = "nvim";	
+  vi = "nvim";    
 
   top = "btop";
   c = "clear";
   ports = "ss -tulanp";
   hp = "nvim /etc/nixos/home/packages.nix";
-	nixedit = "nvim /etc/nixos/";
+  nixedit = "nvim /etc/nixos/";
 }
