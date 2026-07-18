@@ -1,22 +1,22 @@
-{ pkgs, inputs, ... }:
+{ config, pkgs, lib, inputs, ... }: 
+
+let
+  importFromDir = dir:
+    let
+      files = builtins.readDir dir;
+      
+      nixFiles = lib.filterAttrs 
+        (name: type: type == "regular" && lib.hasSuffix ".nix" name && name != "default.nix") 
+        files;
+    in
+    map (name: dir + "/${name}") (builtins.attrNames nixFiles);
+in
 {
   imports = [
- 		inputs.nixcord.homeModules.nixcord
-    ./programs/fish.nix
-    ./programs/kitty.nix
-    ./programs/fuzzel.nix
-    ./programs/starship.nix
-    ./programs/git.nix
-    ./programs/mpv.nix
-    ./programs/btop.nix
-    ./programs/niri.nix
-    ./programs/neovim.nix
-		./programs/direnv.nix
- 		./programs/discord.nix
-		./theme.nix
-  ];
-
-  home.username = "endotrizine";
+    inputs.nixcord.homeModules.nixcord
+    ./theme.nix
+  ] ++ (importFromDir ./programs); 
+	home.username = "endotrizine";
   home.homeDirectory = "/home/endotrizine";
   home.stateVersion = "25.11";
 

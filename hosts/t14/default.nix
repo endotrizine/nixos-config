@@ -6,6 +6,8 @@
     ./boot.nix
     ./laptop.nix
 		./modules.nix
+		./packages.nix
+		./programs/syncthing.nix
   ];
    
   networking.hostName = "t14";

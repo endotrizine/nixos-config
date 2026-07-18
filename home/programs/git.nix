@@ -7,7 +7,7 @@
     	options = {
       	navigate = true;
     		line-numbers = true;
-      	# side-by-side = true;   # раскомmenть если хочешь две колонки
+      	# side-by-side = true;   # две колонки
     	};
   	};
 		settings = {

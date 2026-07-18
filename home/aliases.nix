@@ -1,5 +1,5 @@
 {
-  rebuild = "nh os switch";
+  rebuild = "sudo -v; and nh os switch";
   
   rebuild-dry = "nh os test";
   

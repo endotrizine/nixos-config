@@ -108,4 +108,9 @@ with pkgs; [
 	bitwarden-desktop
 
 	superfile
+
+	obsidian
+
+	onlyoffice-desktopeditors
+	pandoc
 ]

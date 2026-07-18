@@ -12,5 +12,6 @@
     ./nix-settings.nix
     ./packages.nix
 		./virtualization.nix
+		./keyd.nix
   ];
 }
