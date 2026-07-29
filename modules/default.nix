@@ -1,17 +1,14 @@
-{ ... }:
+# modules/default.nix
+#
+# Автоматически импортирует все .nix файлы из этой же директории.
+# Чтобы добавить новый модуль — просто положите файл сюда,
+# ничего дописывать здесь не нужно.
+
+{ lib, ... }:
+let
+  importFromDir = import ../lib/import-dir.nix { inherit lib; };
+in
 {
-  imports = [
-    ./kernel.nix
-    ./locale.nix
-    ./networking.nix
-    ./users.nix
-    ./audio.nix
-    ./graphics.nix
-    ./desktop.nix
-    ./services.nix
-    ./nix-settings.nix
-    ./packages.nix
-		./virtualization.nix
-		./keyd.nix
-  ];
+  imports = importFromDir ./.;
 }
+

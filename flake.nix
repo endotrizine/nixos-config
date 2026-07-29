@@ -3,12 +3,12 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-		catppuccin.url = "github:catppuccin/nix";
+    catppuccin.url = "github:catppuccin/nix";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-		nixcord.url = "github:FlameFlag/nixcord";
+    nixcord.url = "github:FlameFlag/nixcord";
     noctalia-shell.url = "github:noctalia-dev/noctalia-shell";
 
     zen-browser = {
@@ -17,30 +17,41 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, noctalia-shell, nixcord, ... }@inputs:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      noctalia-shell,
+      nixcord,
+      ...
+    }@inputs:
     let
-      mkSystem = host: nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit inputs host; };
-        modules = [
-          (./hosts + "/${host}")
-          noctalia-shell.nixosModules.default
-					inputs.catppuccin.nixosModules.catppuccin
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = { inherit inputs host; };
-            home-manager.users.endotrizine = {
-						  imports = [
-						    ./home/default.nix
-						    inputs.catppuccin.homeModules.catppuccin
-  						];
-						};
-          }
-        ];
-      };
-    in {
+      mkSystem =
+        host:
+        nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = { inherit inputs host; };
+          modules = [
+            (./hosts + "/${host}")
+            noctalia-shell.nixosModules.default
+            inputs.catppuccin.nixosModules.catppuccin
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { inherit inputs host; };
+              home-manager.users.endotrizine = {
+                imports = [
+                  ./home/default.nix
+                  inputs.catppuccin.homeModules.catppuccin
+                ];
+              };
+            }
+          ];
+        };
+    in
+    {
       # `nixos-rebuild switch --flake /etc/nixos#<host>`
       # Current VM: hostname `nixos` lives in hosts/vm/.
       # When migrating to real hardware:
@@ -50,7 +61,7 @@
       #   3. Rebuild: `sudo nixos-rebuild switch --flake /etc/nixos#<newname>`
       nixosConfigurations = {
         desktop = mkSystem "desktop";
-        t14     = mkSystem "t14";
+        t14 = mkSystem "t14";
       };
     };
 }
