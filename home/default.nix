@@ -1,25 +1,28 @@
-{ config, pkgs, lib, inputs, ... }: 
+# home/default.nix
+#
+# Настройки пользователя (home-manager). Одинаковые на всех хостах.
+# Специфичные для конкретной машины пакеты/настройки — в hosts/<host>/
 
+{ config, pkgs, lib, inputs, ... }:
 let
-  importFromDir = dir:
-    let
-      files = builtins.readDir dir;
-      
-      nixFiles = lib.filterAttrs 
-        (name: type: type == "regular" && lib.hasSuffix ".nix" name && name != "default.nix") 
-        files;
-    in
-    map (name: dir + "/${name}") (builtins.attrNames nixFiles);
+  # путь до lib/ считаем от корня репозитория: home/ -> ../lib
+  importFromDir = import ../lib/import-dir.nix { inherit lib; };
 in
 {
   imports = [
     inputs.nixcord.homeModules.nixcord
     ./theme.nix
-  ] ++ (importFromDir ./programs); 
-	home.username = "endotrizine";
+  ] ++ (importFromDir ./programs);
+  # ^ любой новый файл в home/programs/ подхватится сам,
+  #   ничего дописывать сюда не нужно
+
+  home.username = "endotrizine";
   home.homeDirectory = "/home/endotrizine";
   home.stateVersion = "25.11";
 
+  # Список юзерских CLI-тулз и приложений, одинаковый на всех хостах.
+  # Системные/демон-пакеты (portals, wayland, qt runtime и т.п.) — в modules/packages.nix
+  # Специфичное для одной машины (steam, prismlauncher) — в hosts/<host>/packages.nix
   home.packages = import ./packages.nix { inherit pkgs; };
 
   programs.home-manager.enable = true;

@@ -19,7 +19,6 @@
 		pulseaudio-ctl
 
     # Browser 
-    inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 		firefox
 
     # Qt6    
