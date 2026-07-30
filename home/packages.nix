@@ -2,8 +2,8 @@
 #
 # Юзерские CLI-тулзы и приложения (home-manager, home.packages).
 # Одинаковый список на всех хостах (desktop и t14).
-# Системные/демон-пакеты — в modules/packages.nix
-# Пакеты только для одного хоста — в hosts/<host>/packages.nix
+# Системные/демон-пакеты — в system/packages.nix
+# Пакеты только для одного хоста — в hosts/<host>/home/packages.nix
 
 { pkgs, inputs, ... }:
 let

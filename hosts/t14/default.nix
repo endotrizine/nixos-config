@@ -1,11 +1,17 @@
 # hosts/t14/default.nix
 #
-# Все .nix файлы прямо в этой папке (hardware-configuration.nix, boot.nix,
-# laptop.nix, modules.nix, packages.nix, ...) подхватываются автоматически.
-# Чтобы добавить что-то ещё для t14 — просто положите файл сюда.
+# Точка входа хоста t14.
 #
-# Внешние импорты (общие modules/, программы из подпапки programs/)
-# перечисляем явно, автоимпорт их не трогает.
+# ../../system         — общая системная конфигурация (уже резолвит
+#                         hosts/t14/system/settings/* сама, см. system/default.nix)
+# ./system/modules/*    — host-only NixOS-опции (boot, laptop power, nh),
+#                         подхватываются автоматически (importFromDir)
+# ./system/packages.nix — host-only системные пакеты (steam, prismlauncher)
+# ./hardware-configuration.nix — как есть, отдельно
+#
+# home-manager настраивается в flake.nix и подключает home/default.nix,
+# который сам находит host-override в hosts/t14/home/settings/* — здесь
+# ничего home-специфичного дополнительно импортировать не нужно.
 
 { lib, ... }:
 let
@@ -13,9 +19,10 @@ let
 in
 {
   imports = [
-    ../../modules
-    ./programs/syncthing.nix
-  ] ++ (importFromDir ./.);
+    ../../system
+    ./hardware-configuration.nix
+    ./system/packages.nix
+  ] ++ (importFromDir ./system/modules);
 
   networking.hostName = "t14";
   system.stateVersion = "25.11";
@@ -24,4 +31,3 @@ in
   hardware.enableRedistributableFirmware = true;
   hardware.bluetooth.enable = true;
 }
-
