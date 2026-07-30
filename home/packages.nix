@@ -5,7 +5,7 @@
 # Системные/демон-пакеты — в modules/packages.nix
 # Пакеты только для одного хоста — в hosts/<host>/packages.nix
 
-{ pkgs }:
+{ pkgs, inputs, ... }:
 let
   # Кастомный bottles: пересобираем FHS-окружение без openldap
   # (штатный openldap падает на doCheck в этой связке).
@@ -123,9 +123,10 @@ with pkgs;
   obsidian
   onlyoffice-desktopeditors
   pandoc
-  clash-verge-rev
+  #clash-verge-rev
   ayugram-desktop
   myBottles
+  flclashx
 
   # Misc
   libnotify
