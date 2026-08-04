@@ -33,9 +33,12 @@
   };
 
   # конфиг termfilechooser — путь к врапперу подставится из стора
+  # superfile умеет --chooser-file с версии 1.3.0, и в contrib этого
+  # форка (hunkyburrito) уже есть готовый superfile-wrapper.sh —
+  # свой скрипт писать не нужно (было: yazi-wrapper.sh).
   environment.etc."xdg/xdg-desktop-portal-termfilechooser/config".text = ''
     [filechooser]
-    cmd=${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh
+    cmd=${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/superfile-wrapper.sh
     default_dir=$HOME
     env=TERMCMD=kitty -T "filechooser"
   '';
