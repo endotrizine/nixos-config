@@ -73,6 +73,7 @@ with pkgs;
   # File managers
   nautilus
   yazi
+  superfile
 
   # Media
   cava
@@ -80,6 +81,7 @@ with pkgs;
   ffmpeg
   ffmpegthumbnailer
   imagemagick
+  imv
   libdbusmenu-gtk3
   mediainfo
   mpv
@@ -88,10 +90,11 @@ with pkgs;
   yt-dlp
   alsa-utils
 
-  # Archives / files
+  # Archives / files / documents
   p7zip
   poppler
   unzip
+  zathura
 
   # Screenshots / recording
   grim
@@ -119,7 +122,6 @@ with pkgs;
 
   # Apps
   bitwarden-desktop
-  superfile
   obsidian
   onlyoffice-desktopeditors
   pandoc
