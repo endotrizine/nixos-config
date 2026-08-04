@@ -124,6 +124,7 @@ with pkgs;
   onlyoffice-desktopeditors
   pandoc
   #clash-verge-rev
+  koala-clash
   ayugram-desktop
   myBottles
   flclashx

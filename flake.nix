@@ -20,6 +20,7 @@
     };
 
     flclashx.url = "github:endotrizine/FlClashX/nix-flake";
+    koala-clash.url = "github:endotrizine/koala-clash-nix";
   };
 
   outputs =
@@ -29,6 +30,7 @@
       home-manager,
       noctalia-shell,
       flclashx,
+      koala-clash,
       nixcord,
       ...
     }@inputs:
@@ -48,11 +50,13 @@
             noctalia-shell.nixosModules.default
             inputs.catppuccin.nixosModules.catppuccin
             home-manager.nixosModules.home-manager
+            koala-clash.nixosModules.default
 
             {
               # FlClashX overlay
               nixpkgs.overlays = [
                 flclashx.overlays.default
+                koala-clash.overlays.default
               ];
 
               home-manager.useGlobalPkgs = true;

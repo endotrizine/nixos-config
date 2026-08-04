@@ -6,6 +6,7 @@
 # Формат такой же как у home/packages.nix: функция, возвращающая список.
 
 { pkgs, inputs, ... }:
+with pkgs;
 [
-  # pkgs.prismlauncher
+  prismlauncher
 ]

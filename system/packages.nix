@@ -10,19 +10,19 @@
     xdg-desktop-portal-gtk
     xdg-desktop-portal-gnome
 
-    # Graphics / audio 
+    # Graphics / audio
     pipewire
     wayland
     libdrm
     mesa
-		pulseaudio
-		pulseaudio-ctl
+    pulseaudio
+    pulseaudio-ctl
 
-    # Browser 
-		firefox
+    # Browser
+    firefox
 
-    # Qt6    
-		qt6.qtdeclarative
+    # Qt6
+    qt6.qtdeclarative
     qt6.qtbase
     qt6.qtsvg
     qt6.qtwayland
@@ -53,21 +53,23 @@
     swayidle
     swaylock
 
+    koala-clash
+
     # Quickshell / Noctalia
     quickshell
     noctalia-shell
 
-    # Shell 
+    # Shell
     starship
     bat
     btop
     eza
     fish
 
-		# something for the vms from wiki idk
-		dnsmasq
-		spice-vdagent
-  
-		dconf
-	];
+    # something for the vms from wiki idk
+    dnsmasq
+    spice-vdagent
+
+    dconf
+  ];
 }
