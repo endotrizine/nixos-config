@@ -17,7 +17,7 @@ input {
     keyboard {
         xkb {
             layout "us,ru"
-            options "grp:alt_shift_toggle" 
+            options "grp:alt_shift_toggle"
         }
         numlock
     }
@@ -72,7 +72,7 @@ input {
 // https://yalter.github.io/niri/Configuration:-Outputs
 // Remember to uncomment the node by removing "/-"!
 output "eDP-1" {
-    mode "1920x1080@60" 
+    mode "1920x1080@60"
     scale 1.4
 		position x=0 y=0
 }
@@ -95,7 +95,7 @@ overview {
 
 layout {
     // Gap between windows and from windows to screen edges (logical px).
-    gaps 25
+    gaps 15
 
     // Transparent so iNiR's own wallpaper/backdrop shows through.
     background-color "transparent"

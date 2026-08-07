@@ -1,10 +1,10 @@
 {
   rebuild = "sudo -v; and nh os switch";
-  
+
   rebuild-dry = "nh os test";
-  
+
   nix-clean = "nh clean all --keep 3 --keep-since 7d";
-  
+
   nix-update = "nix flake update --flake /etc/nixos";
 
   l = "eza -lah";
@@ -26,7 +26,7 @@
   gd = "git diff";
 
   v = "nvim";
-  vi = "nvim";    
+  vi = "nvim";
 
   top = "btop";
   c = "clear";

@@ -1,4 +1,23 @@
 { pkgs, ... }:
+
+let
+  spfWrapper = pkgs.writeShellScript "spf-portal-wrapper" ''
+    set -e
+
+    multiple="$1"
+    directory="$2"
+    save="$3"
+    path="$4"
+    out="$5"
+
+    if [ -z "$path" ] || [ ! -e "$path" ]; then
+      path="$HOME"
+    fi
+
+    exec ${pkgs.kitty}/bin/kitty --title "termfilechooser" \
+      ${pkgs.superfile}/bin/superfile --chooser-file="$out" "$path"
+  '';
+in
 {
   programs.niri.enable = true;
 
@@ -14,40 +33,44 @@
     };
   };
 
-  # было — дополняем extraPortals и добавляем config
+  # Порталы
   xdg.portal = {
     enable = true;
     extraPortals = [
       pkgs.xdg-desktop-portal-gtk
-      pkgs.xdg-desktop-portal-termfilechooser   # ← добавил
+      pkgs.xdg-desktop-portal-termfilechooser
     ];
     config.niri = {
-    	default = [ "gnome" "gtk" ];
-    	"org.freedesktop.impl.portal.FileChooser" = [ "termfilechooser" ];
-  	};# ← добавил
-  };
-	environment.sessionVariables = {
-    GDK_DEBUG = "portals";
-    GTK_USE_PORTAL = "1";
-    QT_QPA_PLATFORMTHEME = "xdgdesktopportal";   # ← для Telegram/Qt
+      default = [
+        "gnome"
+        "gtk"
+      ];
+      "org.freedesktop.impl.portal.FileChooser" = [ "termfilechooser" ];
+    };
   };
 
-  # конфиг termfilechooser — путь к врапперу подставится из стора
-  # superfile умеет --chooser-file с версии 1.3.0, и в contrib этого
-  # форка (hunkyburrito) уже есть готовый superfile-wrapper.sh —
-  # свой скрипт писать не нужно (было: yazi-wrapper.sh).
+  environment.sessionVariables = {
+    GDK_DEBUG = "portals";
+    GTK_USE_PORTAL = "1";
+    QT_QPA_PLATFORMTHEME = "xdgdesktopportal";
+  };
+
   environment.etc."xdg/xdg-desktop-portal-termfilechooser/config".text = ''
     [filechooser]
-    cmd=${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/superfile-wrapper.sh
+    cmd=${spfWrapper}
     default_dir=$HOME
-    env=TERMCMD=kitty -T "filechooser"
   '';
+
+  # Создаем папку в ~/.config и линкуем туда конфиг
+  systemd.tmpfiles.rules = [
+    "d /home/endotrizine/.config/xdg-desktop-portal-termfilechooser 0755 endotrizine users -"
+    "L+ /home/endotrizine/.config/xdg-desktop-portal-termfilechooser/config - - - - /etc/xdg/xdg-desktop-portal-termfilechooser/config"
+  ];
 
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.greetd.enableGnomeKeyring = true;
   security.pam.services.login.enableGnomeKeyring = true;
-  
-	# pohui
-	fonts.packages = with pkgs; [ geist-font ];
-	programs.dconf.enable = true;
+
+  fonts.packages = with pkgs; [ geist-font ];
+  programs.dconf.enable = true;
 }

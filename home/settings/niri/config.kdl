@@ -17,7 +17,7 @@ input {
     keyboard {
         xkb {
             layout "us,ru"
-            options "grp:alt_shift_toggle" 
+            options "grp:alt_shift_toggle"
         }
         numlock
     }
@@ -72,7 +72,7 @@ input {
 // https://yalter.github.io/niri/Configuration:-Outputs
 // Remember to uncomment the node by removing "/-"!
 output "DP-1" {
-    mode "1920x1080@100" 
+    mode "1920x1080@100"
     scale 1
 		position x=0 y=0
 }
@@ -83,7 +83,7 @@ output "DP-3" {
 }
 output "HDMI-A-1" {
 	mode "1920x1080@74"
-	position x=4480 y=0 
+	position x=4480 y=0
 }
 // Settings that influence how windows are positioned and sized.
 // Find more information on the wiki:
@@ -104,7 +104,7 @@ overview {
 
 layout {
     // Gap between windows and from windows to screen edges (logical px).
-    gaps 25
+    gaps 10
 
     // Transparent so iNiR's own wallpaper/backdrop shows through.
     background-color "transparent"

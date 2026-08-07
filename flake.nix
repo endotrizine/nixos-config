@@ -62,6 +62,8 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
 
+              home-manager.backupFileExtension = "nix_bak";
+
               home-manager.extraSpecialArgs = {
                 inherit inputs host;
               };

@@ -31,6 +31,8 @@ let
 in
 with pkgs;
 [
+
+  gpu-screen-recorder
   # Shell
   bat
   bc
@@ -61,6 +63,7 @@ with pkgs;
   python3
   tealdeer
   zed-editor
+  (pkgs.writeShellScriptBin "devtpl" (builtins.readFile ./assets/devtpl.sh))
 
   # Utils
   httpie
@@ -74,6 +77,7 @@ with pkgs;
   nautilus
   yazi
   superfile
+
 
   # Media
   cava
