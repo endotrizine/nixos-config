@@ -80,7 +80,6 @@ with pkgs;
 
 
   # Media
-  cava
   easyeffects
   ffmpeg
   ffmpegthumbnailer
@@ -91,7 +90,6 @@ with pkgs;
   mpv
   pavucontrol
   playerctl
-  yt-dlp
   alsa-utils
 
   # Archives / files / documents
@@ -115,9 +113,6 @@ with pkgs;
   wtype
   ydotool
 
-  # Launcher
-  fuzzel
-
   # Theming / fonts
   adw-gtk3
   capitaine-cursors
@@ -129,7 +124,6 @@ with pkgs;
   obsidian
   onlyoffice-desktopeditors
   pandoc
-  #clash-verge-rev
   koala-clash
   ayugram-desktop
   myBottles
