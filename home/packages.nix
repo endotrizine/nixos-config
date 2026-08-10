@@ -56,6 +56,7 @@ with pkgs;
   git
   gh
   lazygit
+  git-graph
   neovim
   nixd
   nixfmt

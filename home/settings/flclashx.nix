@@ -5,14 +5,4 @@
 
 { ... }:
 {
-  xdg.configFile."autostart/flclashx.desktop".text = ''
-    [Desktop Entry]
-    Type=Application
-    Name=FlClashX
-    Exec=FlClashX --minimized
-    Icon=FlClashX
-    Terminal=false
-    Categories=Network;
-    X-GNOME-Autostart-enabled=true
-  '';
 }

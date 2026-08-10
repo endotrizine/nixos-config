@@ -12,6 +12,7 @@
       window_margin_width = "21.75";
       confirm_os_window_close = 0;
       shell = "fish";
+      enable_audio_bell = false;
     };
     keybindings = {
       "ctrl+c" = "copy_or_interrupt";
