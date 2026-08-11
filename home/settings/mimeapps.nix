@@ -4,23 +4,23 @@
 # До этого файла xdg.mimeApps не было вообще — xdg-open/порталы
 # открывали что попало (или ничего).
 #
-# nautilus и yazi остаются установлены (home/packages.nix) как
-# запасные/ручные варианты, но дефолт для директорий — superfile,
-# запускаемый через свой .desktop (см. ниже).
+# nautilus остаётся установлен (home/packages.nix) как запасной/ручной
+# вариант, но дефолт для директорий — yazi, запускаемый через свой
+# .desktop (см. ниже).
 #
-# TUI-программы (superfile, nvim) не имеют собственного .desktop —
+# TUI-программы (yazi, nvim) не имеют собственного .desktop —
 # GUI (браузер, nautilus) не умеет их запускать напрямую, поэтому
 # каждая обёрнута в kitty через xdg.desktopEntries.
-# Внутри superfile (Enter на файле) обёртка не нужна — там используется
-# $EDITOR напрямую, без похода через .desktop (см. home/settings/editor.nix).
+# Внутри yazi (Enter на файле) обёртка не нужна — там используются
+# дефолтные openers, без похода через .desktop (см. home/settings/editor.nix).
 
 { ... }:
 {
-  xdg.desktopEntries.superfile = {
-    name = "Superfile";
+  xdg.desktopEntries.yazi = {
+    name = "Yazi";
     genericName = "File Manager";
-    comment = "Pretty fancy and modern terminal file manager";
-    exec = "kitty --title superfile -e spf %f";
+    comment = "Blazing fast terminal file manager written in Rust";
+    exec = "kitty --title yazi -e yazi %f";
     icon = "utilities-terminal";
     terminal = false; # сам оборачивает себя в kitty
     categories = [
@@ -55,7 +55,7 @@
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
-      "inode/directory" = "superfile.desktop";
+      "inode/directory" = "yazi.desktop";
 
       # text/plain — родитель всей иерархии text/* в shared-mime-info
       # ("All text/* types are subclasses of text/plain" — сама спека).

@@ -496,4 +496,5 @@ binds {
 		Mod+Shift+S { screenshot; }
     Ctrl+Print  { screenshot-screen; }
     Alt+Print   { screenshot-window; }
+
 }

@@ -77,7 +77,6 @@ with pkgs;
   # File managers
   nautilus
   yazi
-  superfile
 
 
   # Media
@@ -128,7 +127,6 @@ with pkgs;
   koala-clash
   ayugram-desktop
   myBottles
-  flclashx
 
   # Misc
   libnotify

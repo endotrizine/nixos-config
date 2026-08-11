@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 let
-  spfWrapper = pkgs.writeShellScript "spf-portal-wrapper" ''
+  yaziWrapper = pkgs.writeShellScript "yazi-portal-wrapper" ''
     set -e
 
     multiple="$1"
@@ -15,7 +15,7 @@ let
     fi
 
     exec ${pkgs.kitty}/bin/kitty --title "termfilechooser" \
-      ${pkgs.superfile}/bin/superfile --chooser-file="$out" "$path"
+      ${pkgs.yazi}/bin/yazi --chooser-file="$out" "$path"
   '';
 in
 {
@@ -57,7 +57,7 @@ in
 
   environment.etc."xdg/xdg-desktop-portal-termfilechooser/config".text = ''
     [filechooser]
-    cmd=${spfWrapper}
+    cmd=${yaziWrapper}
     default_dir=$HOME
   '';
 
