@@ -3,6 +3,10 @@
 	nix.settings = {
   	experimental-features = [ "nix-command" "flakes" ];
   	auto-optimise-store = true;
+    substituters = [
+     "https://cache.nixos.org"
+     "https://nix-community.cachix.org"
+   ];
 	};
 	nixpkgs.config.allowUnfree = true;
 

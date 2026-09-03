@@ -1,7 +1,7 @@
 { ... }:
 {
 	services.keyd = {
-  enable = true;
+  enable = true; # TODO
   keyboards = {
     # Создаем конфигурацию по умолчанию (для всех клавиатур)
     default = {

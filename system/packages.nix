@@ -52,6 +52,7 @@
     brightnessctl
     swayidle
     swaylock
+    nix-ld
 
     koala-clash
 
@@ -71,5 +72,7 @@
     spice-vdagent
 
     dconf
+    
+    
   ];
 }

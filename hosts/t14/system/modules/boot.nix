@@ -22,7 +22,7 @@
   };
 
   boot.initrd.systemd.enable = true;
-  boot.kernelParams = [ "quiet" "splash" "loglevel=3" "rd.system.show_status=false" "pcie_aspm=off" "rd.udev.log_level=3" "udev.log_level=3" ];
+  boot.kernelParams = [ "quiet" "splash" "loglevel=3" "rd.system.show_status=false" "rd.udev.log_level=3" "udev.log_level=3" ];
   boot.consoleLogLevel = 0;
   boot.initrd.verbose = false;
 

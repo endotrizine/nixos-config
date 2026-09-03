@@ -64,15 +64,23 @@ with pkgs;
   python3
   tealdeer
   zed-editor
+  dbeaver-bin
+  beekeeper-studio
+  sqlit-tui
+
   (pkgs.writeShellScriptBin "devtpl" (builtins.readFile ./assets/devtpl.sh))
 
   # Utils
   httpie
   nix-direnv
   qbittorrent
+  sshs
+  glow
+  frogmouth
 
   # Terminals
   kitty
+  ghostty
 
   # File managers
   nautilus

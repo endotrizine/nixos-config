@@ -32,7 +32,7 @@ input {
         // drag false
         // drag-lock
         natural-scroll
-        accel-speed 0.2
+        accel-speed 0.1
         accel-profile "flat"
         scroll-factor 0.5
 				// scroll-method "two-finger"
@@ -41,7 +41,7 @@ input {
     mouse {
         // off
         // natural-scroll
-        accel-speed -0.2
+        accel-speed -0.3
         accel-profile "flat"
         // scroll-method "no-scroll"
     }
@@ -49,7 +49,7 @@ input {
     trackpoint {
         // off
         // natural-scroll
-        accel-speed 0.0
+        accel-speed 0.1
         accel-profile "flat"
         scroll-method "on-button-down"
         scroll-button 274
@@ -395,9 +395,9 @@ binds {
     Mod+Comma { spawn "noctalia-shell" "ipc" "call" "settings" "toggle"; }
 
     // ─── App launchers ───
-    Mod+T { spawn "kitty"; }
-    Mod+Return { spawn "kitty"; }
-    Super+E { spawn "kitty" "-e" "yazi"; }
+    Mod+T { spawn "ghostty"; }
+    Mod+Return { spawn "ghostty"; }
+    Super+E { spawn "ghostty" "-e" "yazi"; }
     Super+W { spawn "firefox"; }
 
     // ─── Window management ───
