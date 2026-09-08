@@ -73,6 +73,7 @@
 
     dconf
     
+    tmux
     
   ];
 }

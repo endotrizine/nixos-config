@@ -1,5 +1,12 @@
 # home/settings/neovim/default.nix
 { ... }:
 {
-  xdg.configFile."nvim/init.lua".source = ./nvim.lua;
+  programs.lazyvim.enable = true;
+  #  xdg.configFile = {
+  #    "nvim/init.lua".source = ./nvim.lua;
+  #    "nvim/lua" = {
+  #      source = ./lua;
+  #      recursive = true;
+  #    };
+  #  };
 }

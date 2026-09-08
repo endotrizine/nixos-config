@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 let
   aliases = import ../aliases.nix;
 in
@@ -6,9 +6,12 @@ in
   programs.fish = {
     enable = true;
     shellAliases = aliases;
-    shellInit = "set fish_greeting";
+    shellInit = ''
+      set fish_greeting
+      devenv hook fish | source
+    '';
   };
-	programs.fish.functions.y = ''
+  programs.fish.functions.y = ''
     set tmp (mktemp -t "yazi-cwd.XXXXXX")
     yazi $argv --cwd-file="$tmp"
     if set cwd (command cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]

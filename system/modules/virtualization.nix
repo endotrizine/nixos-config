@@ -5,4 +5,6 @@
   	enable = true;
   	qemu.vhostUserPackages = with pkgs; [ virtiofsd ];
 	};
+  virtualisation.docker.enable = true;
+  users.users.endotrizine.extraGroups = [ "docker" ];
 }

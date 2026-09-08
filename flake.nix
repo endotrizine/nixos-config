@@ -21,18 +21,19 @@
 
     flclashx.url = "github:endotrizine/FlClashX/nix-flake";
     koala-clash.url = "github:endotrizine/koala-clash-nix";
+    lazyvim.url = "github:pfassina/lazyvim-nix";
   };
 
   outputs =
-    {
-      self,
-      nixpkgs,
-      home-manager,
-      noctalia-shell,
-      flclashx,
-      koala-clash,
-      nixcord,
-      ...
+    { self
+    , nixpkgs
+    , home-manager
+    , noctalia-shell
+    , flclashx
+    , koala-clash
+    , nixcord
+    , lazyvim
+    , ...
     }@inputs:
     let
       mkSystem =
@@ -72,6 +73,7 @@
                 imports = [
                   ./home/default.nix
                   inputs.catppuccin.homeModules.catppuccin
+                  lazyvim.homeManagerModules.default
                 ];
               };
             }

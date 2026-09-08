@@ -57,7 +57,6 @@ with pkgs;
   gh
   lazygit
   git-graph
-  neovim
   nixd
   nixfmt
   nix-output-monitor
@@ -67,8 +66,20 @@ with pkgs;
   dbeaver-bin
   beekeeper-studio
   sqlit-tui
-
   (pkgs.writeShellScriptBin "devtpl" (builtins.readFile ./assets/devtpl.sh))
+  docker
+  devenv
+  gcc
+
+  # lsp
+  gopls
+  pyright
+  rust-analyzer
+  roslyn-ls
+  marksman
+  texlab
+  nixd
+  nixpkgs-fmt
 
   # Utils
   httpie
@@ -132,6 +143,7 @@ with pkgs;
   obsidian
   onlyoffice-desktopeditors
   pandoc
+  haskellPackages.pandoc-crossref
   koala-clash
   ayugram-desktop
   myBottles
@@ -141,4 +153,7 @@ with pkgs;
   libqalculate
   translate-shell
   wlsunset
+
+  # fonts
+  corefonts
 ]
