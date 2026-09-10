@@ -1,0 +1,28 @@
+# было: /tmp/fish-fixed.nix
+{ ... }:
+{
+  flake.modules.homeManager.common =
+    { pkgs, ... }:
+    let
+      aliases = import ./aliases.nix;
+    in
+    {
+      programs.fish = {
+        enable = true;
+        shellAliases = aliases;
+        shellInit = ''
+          set fish_greeting
+          devenv hook fish | source
+        '';
+      };
+      programs.fish.functions.y = ''
+        set tmp (mktemp -t "yazi-cwd.XXXXXX")
+        yazi $argv --cwd-file="$tmp"
+        if set cwd (command cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
+            builtin cd -- "$cwd"
+        end
+        rm -f -- "$tmp"
+      '';
+    }
+  ;
+}

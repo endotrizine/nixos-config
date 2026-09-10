@@ -1,8 +1,11 @@
 {
-  description = "endotrizine nixos config";
+  description = "endotrizine nixos config — дендритик-паттерн (flake-parts + import-tree)";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    import-tree.url = "github:vic/import-tree";
 
     catppuccin.url = "github:catppuccin/nix";
 
@@ -32,65 +35,19 @@
   };
 
   outputs =
-    { self
-    , nixpkgs
-    , home-manager
-    , noctalia-shell
-    , flclashx
-    , koala-clash
-    , nixcord
-    , lazyvim
-    , ...
-    }@inputs:
-    let
-      mkSystem =
-        host:
-        nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+    inputs:
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" ];
 
-          specialArgs = {
-            inherit inputs host;
-          };
+      imports = [
+        # Даёт опцию flake.modules.<class>.<name> — основной механизм
+        # дендритик-паттерна (без этого импорта опция не существует).
+        inputs.flake-parts.flakeModules.modules
 
-          modules = [
-            (./hosts + "/${host}")
-
-            noctalia-shell.nixosModules.default
-            inputs.catppuccin.nixosModules.catppuccin
-            home-manager.nixosModules.home-manager
-            koala-clash.nixosModules.default
-
-            {
-              # FlClashX overlay
-              nixpkgs.overlays = [
-                flclashx.overlays.default
-                koala-clash.overlays.default
-              ];
-
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-
-              home-manager.backupFileExtension = "nix_bak";
-
-              home-manager.extraSpecialArgs = {
-                inherit inputs host;
-              };
-
-              home-manager.users.endotrizine = {
-                imports = [
-                  ./home/default.nix
-                  inputs.catppuccin.homeModules.catppuccin
-                  lazyvim.homeManagerModules.default
-                ];
-              };
-            }
-          ];
-        };
-    in
-    {
-      nixosConfigurations = {
-        desktop = mkSystem "desktop";
-        t14 = mkSystem "t14";
-      };
+        # Рекурсивно подхватывает КАЖДЫЙ .nix файл из ./modules как
+        # отдельный flake-parts модуль. Новый файл — новая фича,
+        # ничего руками в imports дописывать не нужно.
+        (inputs.import-tree ./modules)
+      ];
     };
 }
