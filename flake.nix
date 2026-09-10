@@ -22,6 +22,13 @@
     flclashx.url = "github:endotrizine/FlClashX/nix-flake";
     koala-clash.url = "github:endotrizine/koala-clash-nix";
     lazyvim.url = "github:pfassina/lazyvim-nix";
+
+    # Свой flake devenv — берём CLI напрямую из апстрима, чтобы не ждать,
+    # пока кто-то вручную забампает версию в nixpkgs (это не автоматика).
+    devenv = {
+      url = "github:cachix/devenv";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

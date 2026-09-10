@@ -12,13 +12,12 @@
       cursor-style-blink = false;
 
       # Внешний вид и шелл
-      window-padding-x = 22;
-      window-padding-y = 22;
+      window-padding-x = 5;
+      window-padding-y = 5;
       command = "fish";
 
       # Не спрашивать при закрытии
       confirm-close-surface = false;
-      
 
     };
   };

@@ -68,7 +68,10 @@ with pkgs;
   sqlit-tui
   (pkgs.writeShellScriptBin "devtpl" (builtins.readFile ./assets/devtpl.sh))
   docker
-  devenv
+  # devenv из nixpkgs часто отстаёт от апстрима на дни/недели
+  # (бамп версии в nixpkgs делается вручную, не ботом).
+  # Берём напрямую из собственного flake проекта — всегда актуальная версия.
+  inputs.devenv.packages.${pkgs.stdenv.system}.devenv
   gcc
 
   # lsp
