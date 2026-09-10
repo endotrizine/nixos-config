@@ -4,7 +4,7 @@
   flake.modules.homeManager.common =
     { pkgs, ... }:
     let
-      aliases = import ./aliases.nix;
+      aliases = import ./_aliases.nix;
     in
     {
       programs.fish = {
