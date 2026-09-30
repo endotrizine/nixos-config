@@ -1,7 +1,7 @@
 # было: home/packages.nix
 #
 # Юзерские CLI-тулзы и приложения (home-manager, home.packages).
-# Одинаковый список на всех хостах (desktop и t14).
+# Одинаковый
 # Системные/демон-пакеты — в modules/nixos/packages.nix
 # Пакеты только для одного хоста — в modules/hosts/<host>/*.nix
 
@@ -76,6 +76,14 @@
         # Берём напрямую из собственного flake проекта — всегда актуальная версия.
         inputs.devenv.packages.${pkgs.stdenv.system}.devenv
         gcc
+        ghidra
+        (cutter.withPlugins (
+          ps: with ps; [
+            rz-ghidra
+          ]
+        ))
+        man-pages
+        glibc.dev
 
         # lsp
         gopls
@@ -94,6 +102,7 @@
         sshs
         glow
         frogmouth
+        tailscale
 
         # Terminals
         kitty

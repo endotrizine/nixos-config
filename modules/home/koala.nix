@@ -14,6 +14,5 @@
         Categories=Network;
         X-GNOME-Autostart-enabled=true
       '';
-    }
-  ;
+    };
 }

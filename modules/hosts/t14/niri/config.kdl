@@ -1,3 +1,4 @@
+
 // This config is in the KDL format: https://kdl.dev
 // "/-" comments out the following node.
 // Check the wiki for a full description of the configuration:
@@ -76,6 +77,12 @@ output "eDP-1" {
     scale 1.4
 		position x=0 y=0
 }
+// ─── Named workspaces ───────────────────────────────────────────────────────
+// These stay around even when empty and are used by the role-based terminal rules.
+workspace "editor"
+workspace "social"
+workspace "web"
+
 // Settings that influence how windows are positioned and sized.
 // Find more information on the wiki:
 // https://yalter.github.io/niri/Configuration:-Layout
@@ -250,7 +257,12 @@ spawn-at-startup "systemctl" "--user" "start" "xdg-desktop-portal-gtk"
 spawn-at-startup "noctalia-shell"
 spawn-at-startup "bash" "-c" "systemctl --user import-environment XDG_MENU_PREFIX && kbuildsycoca6"
 
+
+// Start a shared Ghostty GTK instance with no initial window.
+spawn-at-startup "ghostty" "--gtk-single-instance=true" "--quit-after-last-window-closed=false" "--initial-window=false"
+
 // Clipboard history: wl-paste watches the clipboard and cliphist stores it.
+// workspace "social"
 // Using type-specific watchers prevents duplicate entries (browsers offer both
 // text/html and text/plain — without --type, cliphist stores both).
 // Access via iNiR's clipboard overlay (Mod+V).
@@ -289,56 +301,60 @@ screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 // Animation settings.
 // The wiki explains how to configure individual animations:
 // https://yalter.github.io/niri/Configuration:-Animations
+
 animations {
     // Uncomment to disable all animations globally.
-    // off
+    off
 
-    // Slow down every animation by this factor (useful for debugging).
-    // Values below 1.0 speed them up. Default: 1.0
-    // slowdown 3.0
+    // Небольшое ускорение, но не настолько сильное, чтобы обрезать кривую.
+    // 1.0 = обычная скорость. Ниже 1.0 = быстрее.
+    //    slowdown 0.7
 
     // ── Workspace transitions ───────────────────────────────────────────────
     workspace-switch {
-        spring damping-ratio=0.98 stiffness=300 epsilon=0.0001
+        spring damping-ratio=1.0 stiffness=1000 epsilon=0.0001
     }
 
     // ── Window lifecycle ────────────────────────────────────────────────────
+    // Резкое появление окна — easing вместо spring, как в дефолте niri.
     window-open {
-        spring damping-ratio=0.98 stiffness=300 epsilon=0.0001
+        duration-ms 120
+        curve "ease-out-expo"
     }
 
-    // Low damping = windows "poof" away with a quick fade.
+    // Резкое исчезновение — короткая длительность, без пружинного "доскока".
     window-close {
-        spring damping-ratio=0.18 stiffness=300 epsilon=0.0001
+        duration-ms 120
+        curve "ease-out-quad"
     }
 
     // ── Layout movement ─────────────────────────────────────────────────────
-    // Scrolling the horizontal strip when you focus a different column.
     horizontal-view-movement {
-        spring damping-ratio=0.98 stiffness=300 epsilon=0.0001
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
     }
 
-    // Dragging or moving a window between columns/workspaces.
+    // Перетаскивание окна между колонками/воркспейсами — можно оставить
+    // чуть более жёстким, раз вам нравится быстрый отклик.
     window-movement {
-        spring damping-ratio=0.98 stiffness=900 epsilon=0.0001
+        spring damping-ratio=1.0 stiffness=900 epsilon=0.0001
     }
 
-    // Interactive column/window resize.
+    // Интерактивный ресайз.
     window-resize {
-        spring damping-ratio=0.98 stiffness=300 epsilon=0.0001
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
     }
 
     // ── UI chrome ───────────────────────────────────────────────────────────
-    // The "config saved" toast that appears after editing this file.
     config-notification-open-close {
-        spring damping-ratio=0.98 stiffness=300 epsilon=0.0001
+        spring damping-ratio=0.6 stiffness=1000 epsilon=0.001
     }
 
-    // Niri's built-in screenshot UI opening.
     screenshot-ui-open {
-        spring damping-ratio=0.98 stiffness=300 epsilon=0.0001
+        duration-ms 150
+        curve "ease-out-quad"
     }
 }
+
 // Window rules let you adjust behavior for individual windows.
 // Find more information on the wiki:
 // https://yalter.github.io/niri/Configuration:-Window-Rules
@@ -374,10 +390,30 @@ window-rule {
     // block-out-from "screencast"
 }
 
+// ─── Role-based Ghostty windows ────────────────────────────────────────────
+// Ghostty uses --class as the Wayland app-id. This lets niri distinguish
+// Neovim/Yazi/Lazygit/btop from an ordinary shell even though they are all Ghostty.
+window-rule {
+    match app-id=r#"^com\.ghostty\.nvim$"#
+    open-on-workspace "editor"
+}
+
+
+// Browser gets its own stable workspace too.
+window-rule {
+    match app-id=r#"firefox$"#
+    open-on-workspace "web"
+}
+
+window-rule {
+    match app-id=r#"^discord$"#
+    match app-id=r#"^com\.ayugram\.desktop$"#
+    open-on-workspace "social"
+}
 // Example: enable rounded corners for all windows.
 // (This example rule is commented out with a "/-" in front.)
 window-rule {
-    geometry-corner-radius 8
+    geometry-corner-radius 4
     clip-to-geometry true
 }
 
@@ -388,17 +424,34 @@ binds {
     Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
     Mod+Shift+O { power-off-monitors; }
 
-    // ─── Shell overlays (Noctalia IPC) ───
-    Mod+Space repeat=false { spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
-    Mod+V { spawn "sh" "-c" "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
-		Mod+Alt+L allow-when-locked=true { spawn "noctalia-shell" "ipc" "call" "lockScreen" "lock"; }
-    Mod+Comma { spawn "noctalia-shell" "ipc" "call" "settings" "toggle"; }
+    // ─── Shell overlays (    // Core Noctalia binds
+    Mod+Space { spawn-sh "noctalia msg panel-toggle launcher"; }
+    Mod+S { spawn-sh "noctalia msg panel-toggle control-center"; }
+    Mod+Comma { spawn-sh "noctalia msg settings-toggle"; }
+    Alt+Tab { spawn-sh "noctalia msg window-switcher hold"; }
+    Mod+V { spawn-sh "noctalia msg panel-toggle clipboard"; }
+    // Niri has a built-in window switcher you might want to try it to see which one you prefer.
+
+    // Audio & Brightness
+    XF86AudioRaiseVolume { spawn-sh "noctalia msg volume-up"; }
+    XF86AudioLowerVolume { spawn-sh "noctalia msg volume-down"; }
+    XF86AudioMute { spawn-sh "noctalia msg volume-mute"; }
+    XF86MonBrightnessUp { spawn-sh "noctalia msg brightness-up"; }
+    XF86MonBrightnessDown { spawn-sh "noctalia msg brightness-down"; }
 
     // ─── App launchers ───
-    Mod+T { spawn "ghostty"; }
-    Mod+Return { spawn "ghostty"; }
-    Super+E { spawn "ghostty" "-e" "yazi"; }
-    Super+W { spawn "firefox"; }
+    // Ordinary shell: stays on the current workspace.
+    Mod+T { spawn "ghostty" "--gtk-single-instance=true"; }
+    Mod+Return { spawn "ghostty" "--gtk-single-instance=true"; }
+
+    // Role-based terminal windows: each gets a unique Wayland app-id.
+    Mod+N { spawn "ghostty" "--class=com.ghostty.nvim" "-e" "nvim"; }
+    Mod+E { spawn "ghostty" "--class=com.ghostty.yazi" "-e" "yazi"; }
+    Mod+G { spawn "ghostty" "--class=com.ghostty.lazygit" "-e" "lazygit"; }
+    Mod+B { spawn "ghostty" "--class=com.ghostty.btop" "-e" "btop"; }
+
+    // Browser.
+    Mod+W { spawn "firefox"; }
 
     // ─── Window management ───
     Mod+Q repeat=false { close-window; }
@@ -452,6 +505,17 @@ binds {
     Mod+Alt+Up   { move-column-to-workspace-up; }
 
     // ─── Workspaces ───
+    // Named workspaces for role-based apps.
+    // Mod+Alt+<key> focuses the corresponding workspace.
+    Mod+Shift+S { focus-workspace "social"; }
+    Mod+Shift+N { focus-workspace "editor"; }
+    Mod+Shift+W { focus-workspace "web"; }
+
+    // Move the currently focused column to a role workspace.
+    Mod+Ctrl+N { move-column-to-workspace "editor"; }
+    Mod+Ctrl+S { move-column-to-workspace "social"; }
+    Mod+Ctrl+W { move-column-to-workspace "web"; }
+
     Mod+1 { focus-workspace 1; }
     Mod+2 { focus-workspace 2; }
     Mod+3 { focus-workspace 3; }
@@ -483,7 +547,6 @@ binds {
 
     // ─── Screenshots (native niri) ───
     Print       { screenshot; }
-		Mod+Shift+S { screenshot; }
     Ctrl+Print  { screenshot-screen; }
     Alt+Print   { screenshot-window; }
 
@@ -492,3 +555,5 @@ binds {
     XF86AudioNext allow-when-locked=true { spawn "playerctl" "next"; }
     XF86AudioPrev allow-when-locked=true { spawn "playerctl" "previous"; }
 }
+
+

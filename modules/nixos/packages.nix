@@ -24,6 +24,8 @@
 
         # Browser
         firefox
+        w3m
+        browsh
 
         # Qt6
         qt6.qtdeclarative
@@ -62,7 +64,8 @@
 
         # Quickshell / Noctalia
         quickshell
-        noctalia-shell
+        #noctalia-shell
+        inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
 
         # Shell
         starship
@@ -80,6 +83,5 @@
         tmux
 
       ];
-    }
-  ;
+    };
 }

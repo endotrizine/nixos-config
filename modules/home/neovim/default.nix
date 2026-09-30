@@ -1,4 +1,4 @@
-# было: modules/home/neovim/default.nix
+# modules/home/neovim/default.nix
 { ... }:
 {
   flake.modules.homeManager.common =
@@ -58,8 +58,51 @@
             }
           '';
 
-          # Настройка Noice под маленькие экраны терминалов
+          # Настройка LSP для Ассемблера (x86 / x86_64 / TASM / NASM)
+          asm = ''
+            return {
+              {
+                "neovim/nvim-lspconfig",
+                opts = {
+                  servers = {
+                    asm_lsp = {
+                      filetypes = { "asm", "vmasm", "s", "S" },
+                    },
+                  },
+                },
+              },
+            }
+          '';
 
+          rustaceanvim = ''
+            return {
+              {
+                "mrcjkb/rustaceanvim",
+                version = "^5", -- или используйте вашу версию
+                lazy = false,
+                opts = {
+                  server = {
+                    default_settings = {
+                      ["rust-analyzer"] = {
+                        -- По умолчанию диагностика (cargo check) тяжелая и идет при сохранении.
+                        -- Если вы хотите проверку на лету, у rust-analyzer есть встроенный механизм:
+                        diagnostics = {
+                          enable = true,
+                          experimental = {
+                            enable = true, -- Включает быструю встроенную проверку при вводе текста
+                          },
+                        },
+                        -- Если вы вообще хотите отключить cargo check при сохранении:
+                        -- checkOnSave = false, 
+                      },
+                    },
+                  },
+                },
+              },
+            }
+          '';
+
+          # Настройка Noice под маленькие экраны терминалов
           noice = ''
             return {
               {
@@ -94,8 +137,10 @@
             }
           '';
         };
+
         # Парсеры Treesitter
         treesitterParsers = with pkgs.vimPlugins.nvim-treesitter-parsers; [
+          asm # <--- Подсветка синтаксиса Ассемблера
           cpp
           c_sharp
           fsharp
@@ -114,11 +159,14 @@
           rust
           ron
           sql
+          html
+          zig
         ];
 
         # Дополнительные системные пакеты
         extraPackages = with pkgs; [
           statix
+          asm-lsp # <--- Языковой сервер для Ассемблера (всплывающие подсказки по инструкциям)
           # vim-sleuth из репозитория Nixpkgs, чтобы LazyVim увидел сам плагин
           vimPlugins.vim-sleuth
           # Подтягиваем hardtime и его зависимость nui.nvim из Nixpkgs
@@ -126,6 +174,5 @@
           vimPlugins.nui-nvim
         ];
       };
-    }
-  ;
+    };
 }
