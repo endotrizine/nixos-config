@@ -19,13 +19,13 @@ let
         config.flake.modules.nixos.common
         config.flake.modules.nixos."hosts/${hostName}"
 
-        inputs.noctalia-shell.nixosModules.default
         inputs.catppuccin.nixosModules.catppuccin
         inputs.home-manager.nixosModules.home-manager
         inputs.koala-clash.nixosModules.default
 
         {
           nixpkgs.overlays = [
+            inputs.helium-flake.overlays.default
             inputs.flclashx.overlays.default
             inputs.koala-clash.overlays.default
           ];

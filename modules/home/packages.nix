@@ -103,6 +103,7 @@
         glow
         frogmouth
         tailscale
+        wine
 
         # Terminals
         kitty

@@ -15,15 +15,14 @@
     };
 
     nixcord.url = "github:FlameFlag/nixcord";
-    noctalia-shell.url = "github:noctalia-dev/noctalia-shell";
+
     noctalia = {
       url = "github:noctalia-dev/noctalia";
       inputs.nixpkgs.follows = "nixpkgs"; # this line is optional, prevents downloading two versions of nixpkgs but disables cache
     };
-    zen-browser = {
-      url = "github:youwen5/zen-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+
+    helium-flake.url = "github:oxcl/nix-flake-helium-browser";
+    helium-flake.inputs.nixpkgs.follows = "nixpkgs";
 
     flclashx.url = "github:endotrizine/FlClashX/nix-flake";
     koala-clash.url = "github:endotrizine/koala-clash-nix";

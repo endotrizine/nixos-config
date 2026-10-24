@@ -24,8 +24,7 @@
 
         # Browser
         firefox
-        w3m
-        browsh
+        helium
 
         # Qt6
         qt6.qtdeclarative
